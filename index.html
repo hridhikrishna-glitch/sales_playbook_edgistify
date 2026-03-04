@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edgistify Lead Qualification Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .transition-all { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        const Icon = ({ name, size = 20, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) { window.lucide.createIcons(); }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('flow');
+            const [selectedProcess, setSelectedProcess] = useState(0);
+            const pdfLink = "https://drive.google.com/file/d/14nzhPHaAj9EGxET2OgJQjkbaLE48jrD4/view?usp=sharing";
+
+            const processes = [
+                {
+                    id: 'research',
+                    title: "Market Research",
+                    icon: "search",
+                    color: "blue",
+                    short: "Identify & Categorize",
+                    details: [
+                        "Identify high-potential companies via Tracxn/Google.",
+                        "CRM First: Add company to Zoho CRM immediately.",
+                        "Categorization: Must mark as A, B, C, or D using Gemini Tool.",
+                        "Identify at least 3 leads for A & B category accounts at this stage."
+                    ]
+                },
+                {
+                    id: 'outreach',
+                    title: "Outreach",
+                    icon: "phone-call",
+                    color: "indigo",
+                    short: "Connect & Engage",
+                    details: [
+                        "Enrich contact data using Lusha or SignalHire.",
+                        "Target Decision Makers only (Founders, CEO, Supply Chain Heads).",
+                        "Identify Sales Hook / Trigger Events before calling.",
+                        "Initial contact to introduce Edgistify services."
+                    ]
+                },
+                {
+                    id: 'follow-up',
+                    title: "Follow Up",
+                    icon: "calendar-clock",
+                    color: "amber",
+                    short: "Task Persistence",
+                    details: [
+                        "If client gives a timeline: Create task for that exact date.",
+                        "If no timeline: Create mandatory follow-up task after 60 days.",
+                        "No lead should remain idle without a scheduled next action.",
+                        "Persistent research: If contact is wrong, find the correct person."
+                    ]
+                },
+                {
+                    id: 'qualification',
+                    title: "Qualification",
+                    icon: "check-circle",
+                    color: "emerald",
+                    short: "Convert & Close",
+                    details: [
+                        "MANDATORY: Explain all Edgistify services before marking 'No Requirement'.",
+                        "Verify Lead to Qualification conversion metrics.",
+                        "Confirm requirement fit and logistics relevance.",
+                        "Schedule Demo or mark as Qualified in CRM."
+                    ]
+                }
+            ];
+
+            const rules = [
+                { title: "CRM First", desc: "Every company must be added to Zoho CRM immediately." },
+                { title: "Categorization", desc: "Categorize leads as A, B, C, or D based on revenue/potential." },
+                { title: "Target Decision Makers", desc: "Focus on Founders, CEOs, Directors, or Supply Chain Heads." },
+                { title: "Persistent Research", desc: "A wrong contact is not closure; find the correct person." },
+                { title: "Service Education", desc: "Explain all Edgistify services before marking 'No Requirement'." },
+                { title: "Mandatory Follow-ups", desc: "Create tasks for specific dates or a 60-day default." },
+                { title: "Next Actions", desc: "No lead should remain idle without a task/call/retry." },
+                { title: "Sprint Priority", desc: "High priority: Target 25 Sprint leads per week." },
+            ];
+
+            const tools = [
+                { name: "Full Workflow PDF", type: "Official Guide", url: pdfLink, use: "Complete Process Flowchart & Visuals" },
+                { name: "Client Category Tool", type: "Gemini", url: "https://gemini.google.com/gem/1Y8ZoCIIZ1nEJP6kv6vIPs8gmH6l0rA7n", use: "Category, Logistics Relevance" },
+                { name: "Sales Hook Tool", type: "Gemini", url: "https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YIFhiA2FYTtS1XbA", use: "Trigger Events, Outreach Hooks" },
+                { name: "Lusha", type: "Enrichment", url: "https://www.lusha.com", use: "Mobile numbers, Email IDs" },
+                { name: "SignalHire", type: "Enrichment", url: "https://www.signalhire.com", use: "Decision maker info" },
+                { name: "Tracxn", type: "Research", url: "https://tracxn.com", use: "Startup data, Revenue estimates" }
+            ];
+
+            return (
+                <div className="min-h-screen">
+                    <nav className="bg-white border-b border-slate-200 sticky top-0 z-10">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16 items-center">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-blue-600 p-2 rounded-lg text-white">
+                                        <Icon name="target" />
+                                    </div>
+                                    <span className="font-bold text-xl tracking-tight text-slate-800">Edgistify Operations</span>
+                                </div>
+                                <div className="hidden md:flex space-x-4">
+                                    <button onClick={() => setActiveTab('flow')} className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'flow' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:text-blue-600'}`}>Process Flow</button>
+                                    <button onClick={() => setActiveTab('guidelines')} className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'guidelines' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:text-blue-600'}`}>Guidelines</button>
+                                    <button onClick={() => setActiveTab('tools')} className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'tools' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:text-blue-600'}`}>Toolkit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        {activeTab === 'flow' && (
+                            <div className="space-y-8 animate-in fade-in duration-500">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h1 className="text-2xl font-bold">Standard Operating Procedure</h1>
+                                        <p className="text-slate-500 text-sm">Click on a stage to see the detailed process flow.</p>
+                                    </div>
+                                    <a href={pdfLink} target="_blank" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all">
+                                        <Icon name="file-text" size={16} /> View Full PDF
+                                    </a>
+                                </div>
+
+                                {/* Main Process Flow Interactive */}
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    {processes.map((proc, idx) => (
+                                        <button 
+                                            key={proc.id}
+                                            onClick={() => setSelectedProcess(idx)}
+                                            className={`group relative p-6 rounded-2xl border-2 transition-all text-left ${selectedProcess === idx ? `border-${proc.color}-500 bg-${proc.color}-50 shadow-lg` : 'border-slate-200 bg-white hover:border-slate-300'}`}
+                                        >
+                                            <div className={`mb-3 p-3 rounded-xl inline-block transition-colors ${selectedProcess === idx ? `bg-${proc.color}-600 text-white` : `bg-slate-100 text-slate-500 group-hover:bg-${proc.color}-100 group-hover:text-${proc.color}-600`}`}>
+                                                <Icon name={proc.icon} size={24} />
+                                            </div>
+                                            <h3 className={`font-bold text-lg leading-tight mb-1 ${selectedProcess === idx ? `text-${proc.color}-900` : 'text-slate-800'}`}>{proc.title}</h3>
+                                            <p className={`text-xs ${selectedProcess === idx ? `text-${proc.color}-700` : 'text-slate-500'}`}>{proc.short}</p>
+                                            {selectedProcess === idx && (
+                                                <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-${proc.color}-50 border-r-2 border-b-2 border-${proc.color}-500 hidden md:block`}></div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Process Detail Card */}
+                                <div className={`p-8 rounded-3xl transition-all duration-500 ${selectedProcess !== null ? `bg-white border-2 border-${processes[selectedProcess].color}-500/20 shadow-xl` : 'hidden'}`}>
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <div className={`p-3 rounded-xl bg-${processes[selectedProcess].color}-600 text-white`}>
+                                            <Icon name={processes[selectedProcess].icon} size={28} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{processes[selectedProcess].title} Stage</h2>
+                                            <p className="text-slate-500">Mandatory actions and process requirements</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-4">
+                                            {processes[selectedProcess].details.map((detail, i) => (
+                                                <div key={i} className="flex gap-4 items-start group">
+                                                    <div className={`mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-${processes[selectedProcess].color}-100 text-${processes[selectedProcess].color}-600 flex items-center justify-center font-bold text-xs`}>
+                                                        {i + 1}
+                                                    </div>
+                                                    <p className="text-slate-700 leading-relaxed group-hover:text-slate-900">{detail}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className={`p-6 rounded-2xl bg-${processes[selectedProcess].color}-50/50 border border-${processes[selectedProcess].color}-100`}>
+                                            <h4 className={`font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2 text-${processes[selectedProcess].color}-800`}>
+                                                <Icon name="alert-circle" size={16} /> 
+                                                Critical Checkpoint
+                                            </h4>
+                                            <p className="text-sm text-slate-600 leading-relaxed italic">
+                                                {selectedProcess === 0 && "Remember: Categorization is mandatory. Do not enter leads into CRM without Gemini tool verification."}
+                                                {selectedProcess === 1 && "Targeting the wrong person wastes time. If the Founder isn't available, find the Supply Chain Head."}
+                                                {selectedProcess === 2 && "The 60-day rule is non-negotiable for leads with no timeline. Persistence leads to conversion."}
+                                                {selectedProcess === 3 && "Accepting 'No Requirement' without explaining the full service portfolio is a process violation."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'guidelines' && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in slide-in-from-bottom-4">
+                                <section>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Icon name="clipboard-check" className="text-blue-600" />
+                                        <h2 className="text-xl font-bold">10 Golden Rules</h2>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {rules.map((rule, idx) => (
+                                            <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200 flex gap-3 items-center">
+                                                <div className="bg-slate-100 text-slate-500 font-bold w-6 h-6 flex items-center justify-center rounded-full text-xs shrink-0">{idx + 1}</div>
+                                                <div>
+                                                    <h4 className="font-bold text-sm text-slate-800 leading-none mb-1">{rule.title}</h4>
+                                                    <p className="text-xs text-slate-600">{rule.desc}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                                <section className="space-y-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Icon name="bar-chart-3" className="text-indigo-600" />
+                                        <h2 className="text-xl font-bold">Performance Targets</h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="bg-indigo-600 text-white p-6 rounded-2xl shadow-lg">
+                                            <p className="text-indigo-100 text-[10px] font-bold uppercase mb-1">Sprint Priority</p>
+                                            <h3 className="text-2xl font-black">25 Leads / Wk</h3>
+                                        </div>
+                                        <div className="bg-white p-6 rounded-2xl border-2 border-indigo-500/20">
+                                            <p className="text-slate-400 text-[10px] font-bold uppercase mb-1">Enrichment (A & B)</p>
+                                            <h3 className="text-2xl font-black text-slate-800">3 Connections</h3>
+                                            <p className="text-[10px] text-slate-500 mt-1">Required leads per account.</p>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        )}
+
+                        {activeTab === 'tools' && (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in zoom-in-95">
+                                {tools.map((tool, idx) => (
+                                    <div key={idx} className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group">
+                                        <div className="p-4 border-b bg-slate-50 group-hover:bg-blue-50">
+                                            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{tool.type}</span>
+                                            <h3 className="font-bold text-slate-800">{tool.name}</h3>
+                                        </div>
+                                        <div className="p-4">
+                                            <p className="text-xs text-slate-500 mb-4 h-8 overflow-hidden">{tool.use}</p>
+                                            <a href={tool.url} target="_blank" className="block text-center py-2 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-800 text-xs font-bold rounded-lg transition-colors">Open Resource</a>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </main>
+                    <footer className="py-8 text-center text-slate-400 text-xs">
+                        <p>© Edgistify Internal Operations • Process v2.0</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+    <!-- Hidden utilities for dynamic tailwind classes -->
+    <div className="hidden bg-blue-50 bg-blue-600 text-blue-900 text-blue-600 text-blue-700 border-blue-500 bg-blue-100 text-blue-800"></div>
+    <div className="hidden bg-indigo-50 bg-indigo-600 text-indigo-900 text-indigo-600 text-indigo-700 border-indigo-500 bg-indigo-100 text-indigo-800"></div>
+    <div className="hidden bg-amber-50 bg-amber-600 text-amber-900 text-amber-600 text-amber-700 border-amber-500 bg-amber-100 text-amber-800"></div>
+    <div className="hidden bg-emerald-50 bg-emerald-600 text-emerald-900 text-emerald-600 text-emerald-700 border-emerald-500 bg-emerald-100 text-emerald-800"></div>
+</body>
+</html>
