@@ -14,6 +14,8 @@
   body { font-family:'Inter',sans-serif; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   .animate-in { animation:fadeIn 0.4s ease-out forwards; }
+  @keyframes fillBar { from { width: 0% } to { width: var(--target-width) } }
+  .fill-bar { animation: fillBar 1s ease-out forwards; }
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -28,22 +30,15 @@ const Icon = ({name,size=20,className=''}) => {
 
 // ── OUTREACH GUIDE PAGE ──────────────────────────────────────────────
 const OutreachGuidePage = () => {
-
   const steps = [
     {
-      num: '01',
-      title: 'Identify the Lead Source',
-      icon: 'map-pin',
-      color: 'blue',
+      num: '01', title: 'Identify the Lead Source', icon: 'map-pin', color: 'blue',
       desc: 'Every lead enters through one of two tracks. Identify which before proceeding.',
       twoTrack: true,
       tracks: [
         {
-          label: 'Track 1 — Sprint',
-          badge: 'bg-blue-100 text-blue-700 border-blue-200',
-          bar: 'bg-blue-500',
-          icon: 'trending-up',
-          sub: 'Management-assigned leads',
+          label: 'Track 1 — Sprint', badge: 'bg-blue-100 text-blue-700 border-blue-200',
+          bar: 'bg-blue-500', icon: 'trending-up', sub: 'Management-assigned leads',
           points: [
             'Leads are assigned directly by management — these are pre-vetted, high-conversion-potential accounts.',
             'Source is inbound, referred, or flagged by leadership based on strategic fit.',
@@ -53,11 +48,8 @@ const OutreachGuidePage = () => {
           action: 'Go to Step 3 → Check Trigger Events & Find a Sales Hook',
         },
         {
-          label: 'Track 2 — Sales Research',
-          badge: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-          bar: 'bg-indigo-500',
-          icon: 'search',
-          sub: 'Self-sourced outbound leads',
+          label: 'Track 2 — Sales Research', badge: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+          bar: 'bg-indigo-500', icon: 'search', sub: 'Self-sourced outbound leads',
           points: [
             'Rep independently identifies and sources leads via Tracxn, Google, LinkedIn, or industry databases.',
             'No pre-vetting — the rep owns the research and qualification from scratch.',
@@ -70,10 +62,7 @@ const OutreachGuidePage = () => {
       mergeNote: 'Both tracks merge at Step 5 — Outreach',
     },
     {
-      num: '02',
-      title: 'Sales Research Sprint',
-      icon: 'search',
-      color: 'indigo',
+      num: '02', title: 'Sales Research Sprint', icon: 'search', color: 'indigo',
       desc: 'Track 2 only. Conduct focused, time-boxed research before any outreach.',
       trackBadge: 'Track 2 — Sales Research Only',
       items: [
@@ -86,17 +75,12 @@ const OutreachGuidePage = () => {
       ],
     },
     {
-      num: '03',
-      title: 'Categorise the Lead — A, B, C, or D',
-      icon: 'tag',
-      color: 'violet',
+      num: '03', title: 'Categorise the Lead — A, B, C, or D', icon: 'tag', color: 'violet',
       desc: 'Both tracks. Categorisation is mandatory. Use the Gemini Category Tool for every lead.',
       sub: true,
       categories: [
         {
-          label: 'Category A',
-          badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-          bar: 'bg-emerald-500',
+          label: 'Category A', badge: 'bg-emerald-100 text-emerald-700 border-emerald-200', bar: 'bg-emerald-500',
           rules: [
             'High-revenue company with clear logistics volume (typically ₹50Cr+ turnover).',
             'Active supply chain operations — warehouse, fulfilment, or last-mile activity.',
@@ -107,9 +91,7 @@ const OutreachGuidePage = () => {
           action: 'Minimum 3 contacts identified. Follow up within 15 days. High sprint priority.',
         },
         {
-          label: 'Category B',
-          badge: 'bg-blue-100 text-blue-700 border-blue-200',
-          bar: 'bg-blue-500',
+          label: 'Category B', badge: 'bg-blue-100 text-blue-700 border-blue-200', bar: 'bg-blue-500',
           rules: [
             'Mid-sized company with moderate logistics activity (₹10Cr–₹50Cr range).',
             'Supply chain need exists but is less urgent or less defined.',
@@ -120,9 +102,7 @@ const OutreachGuidePage = () => {
           action: 'Minimum 3 contacts identified. Follow up within 15 days. Schedule 60-day re-engagement if no immediate requirement.',
         },
         {
-          label: 'Category C',
-          badge: 'bg-amber-100 text-amber-700 border-amber-200',
-          bar: 'bg-amber-400',
+          label: 'Category C', badge: 'bg-amber-100 text-amber-700 border-amber-200', bar: 'bg-amber-400',
           rules: [
             'Smaller company with limited or unverified logistics volume.',
             'Sector relevance is tangential — not a primary Edgistify use case.',
@@ -132,9 +112,7 @@ const OutreachGuidePage = () => {
           action: 'Lower priority. Add to CRM but deprioritise in sprint plan. Revisit quarterly.',
         },
         {
-          label: 'Category D',
-          badge: 'bg-red-100 text-red-700 border-red-200',
-          bar: 'bg-red-400',
+          label: 'Category D', badge: 'bg-red-100 text-red-700 border-red-200', bar: 'bg-red-400',
           rules: [
             'No discernible logistics requirement.',
             'Company is too small, irrelevant sector, or already using a competing solution with a long-term contract.',
@@ -145,10 +123,7 @@ const OutreachGuidePage = () => {
       ],
     },
     {
-      num: '04',
-      title: 'Check Trigger Events & Build a Sales Hook',
-      icon: 'zap',
-      color: 'amber',
+      num: '04', title: 'Check Trigger Events & Build a Sales Hook', icon: 'zap', color: 'amber',
       desc: 'Sprint leads enter here. Every outreach call needs a reason — never call without a hook.',
       trackBadge: 'Sprint leads start here — Both tracks continue from this point',
       items: [
@@ -162,10 +137,7 @@ const OutreachGuidePage = () => {
       ],
     },
     {
-      num: '05',
-      title: 'Add to Sprint Plan Module in Zoho',
-      icon: 'database',
-      color: 'slate',
+      num: '05', title: 'Add to Sprint Plan Module in Zoho', icon: 'database', color: 'slate',
       desc: 'Both tracks are now unified. Log everything before you pick up the phone.',
       trackBadge: 'Both tracks fully merged from here onwards',
       items: [
@@ -177,10 +149,7 @@ const OutreachGuidePage = () => {
       ],
     },
     {
-      num: '06',
-      title: 'Outreach & Contact Rules',
-      icon: 'phone-call',
-      color: 'indigo',
+      num: '06', title: 'Outreach & Contact Rules', icon: 'phone-call', color: 'indigo',
       desc: 'Who you call matters as much as what you say.',
       items: [
         'Target decision makers only: Founders, CEOs, Directors, VP/Head of Supply Chain or Logistics.',
@@ -192,10 +161,7 @@ const OutreachGuidePage = () => {
       ],
     },
     {
-      num: '07',
-      title: 'Requirement Check & Qualification',
-      icon: 'check-circle',
-      color: 'emerald',
+      num: '07', title: 'Requirement Check & Qualification', icon: 'check-circle', color: 'emerald',
       desc: 'Never mark "No Requirement" without a full service walkthrough.',
       items: [
         'MANDATORY: Explain all Edgistify services before deciding there is no requirement.',
@@ -206,10 +172,7 @@ const OutreachGuidePage = () => {
       ],
     },
     {
-      num: '08',
-      title: 'Follow-Up Rules',
-      icon: 'calendar-clock',
-      color: 'amber',
+      num: '08', title: 'Follow-Up Rules', icon: 'calendar-clock', color: 'amber',
       desc: 'No lead should ever sit idle without a next action.',
       items: [
         'If the client gives a specific follow-up date: create a task for that exact day in Zoho.',
@@ -222,21 +185,20 @@ const OutreachGuidePage = () => {
   ];
 
   const stepColors = {
-    blue:   { bg:'bg-blue-50',   border:'border-blue-100',  icon:'bg-blue-600',   num:'text-blue-200',  tag:'bg-blue-100 text-blue-700' },
-    indigo: { bg:'bg-indigo-50', border:'border-indigo-100',icon:'bg-indigo-600', num:'text-indigo-200',tag:'bg-indigo-100 text-indigo-700' },
-    violet: { bg:'bg-violet-50', border:'border-violet-100',icon:'bg-violet-600', num:'text-violet-200',tag:'bg-violet-100 text-violet-700' },
-    amber:  { bg:'bg-amber-50',  border:'border-amber-100', icon:'bg-amber-500',  num:'text-amber-200', tag:'bg-amber-100 text-amber-700' },
-    slate:  { bg:'bg-slate-50',  border:'border-slate-200', icon:'bg-slate-600',  num:'text-slate-300', tag:'bg-slate-100 text-slate-600' },
-    emerald:{ bg:'bg-emerald-50',border:'border-emerald-100',icon:'bg-emerald-600',num:'text-emerald-200',tag:'bg-emerald-100 text-emerald-700' },
+    blue:   { bg:'bg-blue-50',   border:'border-blue-100',  icon:'bg-blue-600',   num:'text-blue-400',  tag:'bg-blue-100 text-blue-700' },
+    indigo: { bg:'bg-indigo-50', border:'border-indigo-100',icon:'bg-indigo-600', num:'text-indigo-400',tag:'bg-indigo-100 text-indigo-700' },
+    violet: { bg:'bg-violet-50', border:'border-violet-100',icon:'bg-violet-600', num:'text-violet-400',tag:'bg-violet-100 text-violet-700' },
+    amber:  { bg:'bg-amber-50',  border:'border-amber-100', icon:'bg-amber-500',  num:'text-amber-400', tag:'bg-amber-100 text-amber-700' },
+    slate:  { bg:'bg-slate-50',  border:'border-slate-200', icon:'bg-slate-600',  num:'text-slate-400', tag:'bg-slate-100 text-slate-600' },
+    emerald:{ bg:'bg-emerald-50',border:'border-emerald-100',icon:'bg-emerald-600',num:'text-emerald-400',tag:'bg-emerald-100 text-emerald-700' },
   };
 
   return (
     <div className="animate-in space-y-6">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Lead Enrichment & Outreach Guide</h1>
-          <p className="text-slate-500 text-sm mt-1">Step-by-step process for researching, categorising, and qualifying leads — including full A & B category rules.</p>
+          <p className="text-slate-500 text-sm mt-1">Step-by-step process for researching, categorising, and qualifying leads.</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">8 Steps</span>
@@ -245,41 +207,31 @@ const OutreachGuidePage = () => {
         </div>
       </div>
 
-      {/* Steps */}
       <div className="space-y-4">
         {steps.map((step, i) => {
           const c = stepColors[step.color];
           return (
             <div key={i} className={`rounded-2xl border ${c.border} ${c.bg} overflow-hidden`}>
-              {/* Step header */}
               <div className="flex items-center gap-4 px-6 py-4 border-b border-inherit">
                 <div className={`w-9 h-9 rounded-xl ${c.icon} text-white flex items-center justify-center flex-shrink-0`}>
                   <Icon name={step.icon} size={17}/>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${c.num.replace('text-','text-').replace('-200','-400')}`}>Step {step.num}</span>
-                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${c.num}`}>Step {step.num}</span>
                   <h2 className="text-base font-black text-slate-900 leading-tight">{step.title}</h2>
                 </div>
                 <span className={`hidden md:block text-[11px] font-medium px-3 py-1 rounded-full border ${c.tag} flex-shrink-0`}>{step.desc}</span>
               </div>
-
-              {/* Step body */}
               <div className="px-6 py-5">
-
-                {/* Track badge for track-specific steps */}
                 {step.trackBadge && (
                   <div className="mb-4">
                     <span className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider border ${
-                      step.color === 'amber' ? 'bg-amber-100 text-amber-700 border-amber-200' :
-                      step.color === 'indigo' ? 'bg-indigo-100 text-indigo-700 border-indigo-200' :
+                      step.color==='amber'?'bg-amber-100 text-amber-700 border-amber-200':
+                      step.color==='indigo'?'bg-indigo-100 text-indigo-700 border-indigo-200':
                       'bg-slate-100 text-slate-600 border-slate-200'
                     }`}>{step.trackBadge}</span>
                   </div>
                 )}
-
-                {/* Two-track layout */}
                 {step.twoTrack && (
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -288,9 +240,7 @@ const OutreachGuidePage = () => {
                           <div className={`h-1 ${track.bar}`}></div>
                           <div className="p-4">
                             <div className="flex items-center gap-2 mb-3">
-                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${track.bar} text-white flex-shrink-0`}>
-                                <Icon name={track.icon} size={13}/>
-                              </div>
+                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${track.bar} text-white flex-shrink-0`}><Icon name={track.icon} size={13}/></div>
                               <div>
                                 <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${track.badge}`}>{track.label}</span>
                                 <p className="text-[11px] text-slate-500 mt-0.5">{track.sub}</p>
@@ -312,15 +262,12 @@ const OutreachGuidePage = () => {
                         </div>
                       ))}
                     </div>
-                    {/* Merge note */}
                     <div className="flex items-center gap-3 bg-slate-900 rounded-xl px-5 py-3">
                       <Icon name="git-merge" size={16} className="text-slate-400 flex-shrink-0"/>
                       <p className="text-sm font-bold text-white">{step.mergeNote}</p>
                     </div>
                   </div>
                 )}
-
-                {/* Regular bullet steps */}
                 {step.items && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
                     {step.items.map((item, j) => (
@@ -331,18 +278,14 @@ const OutreachGuidePage = () => {
                     ))}
                   </div>
                 )}
-
-                {/* Category cards */}
                 {step.categories && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {step.categories.map((cat, j) => (
                       <div key={j} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                         <div className={`h-1 ${cat.bar}`}></div>
                         <div className="p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className={`text-xs font-black px-3 py-1 rounded-full border ${cat.badge}`}>{cat.label}</span>
-                          </div>
-                          <div className="space-y-1.5 mb-4">
+                          <span className={`text-xs font-black px-3 py-1 rounded-full border ${cat.badge}`}>{cat.label}</span>
+                          <div className="space-y-1.5 my-3">
                             {cat.rules.map((rule, k) => (
                               <div key={k} className="flex items-start gap-2">
                                 <Icon name="check" size={12} className="text-slate-400 mt-0.5 flex-shrink-0"/>
@@ -365,23 +308,197 @@ const OutreachGuidePage = () => {
         })}
       </div>
 
-      {/* Quick Reference Footer */}
       <div className="bg-slate-900 rounded-2xl p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="text-center">
-          <p className="text-3xl font-black text-white">3</p>
-          <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Min contacts for A & B</p>
+        {[['3','Min contacts for A & B'],['15','Days max re-engagement (A/B)'],['60','Days default follow-up task'],['25','Sprint leads per week']].map(([n,l],i)=>(
+          <div key={i} className="text-center">
+            <p className="text-3xl font-black text-white">{n}</p>
+            <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">{l}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ── DONUT CHART ───────────────────────────────────────────────────────
+const DonutChart = ({ data, size = 220, thickness = 38 }) => {
+  const r = (size - thickness) / 2;
+  const cx = size / 2, cy = size / 2;
+  const circ = 2 * Math.PI * r;
+  let cumPct = 0;
+  const gap = 1.5; // degrees gap between segments
+
+  const segments = data.map((d) => {
+    const startPct = cumPct;
+    cumPct += d.pct;
+    const startDeg = (startPct / 100) * 360 - 90 + gap / 2;
+    const endDeg   = (cumPct   / 100) * 360 - 90 - gap / 2;
+    const startRad = (startDeg * Math.PI) / 180;
+    const endRad   = (endDeg   * Math.PI) / 180;
+    const x1 = cx + r * Math.cos(startRad), y1 = cy + r * Math.sin(startRad);
+    const x2 = cx + r * Math.cos(endRad),   y2 = cy + r * Math.sin(endRad);
+    const large = d.pct > 50 ? 1 : 0;
+    return { ...d, path: `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}` };
+  });
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {segments.map((s, i) => (
+        <path key={i} d={s.path} fill="none" stroke={s.hex} strokeWidth={thickness} strokeLinecap="butt">
+          <title>{s.label}: {s.pct}%</title>
+        </path>
+      ))}
+      {/* Centre text */}
+      <text x={cx} y={cy - 10} textAnchor="middle" fontSize="28" fontWeight="900" fill="#0f172a" fontFamily="Inter,sans-serif">100</text>
+      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="10" fontWeight="700" fill="#94a3b8" fontFamily="Inter,sans-serif" letterSpacing="1">DEALS</text>
+    </svg>
+  );
+};
+
+// ── GUIDELINES PAGE ───────────────────────────────────────────────────
+const GuidelinesPage = () => {
+  const dealBreakdown = [
+    { label: 'Large Deal',      range: '> ₹10L',    pct: 10, count: 10, hex: '#7c3aed', color: 'bg-violet-600', light: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200' },
+    { label: 'Medium Deal',     range: '₹5L – ₹10L',pct: 20, count: 20, hex: '#3b82f6', color: 'bg-blue-500',   light: 'bg-blue-100',   text: 'text-blue-700',   border: 'border-blue-200'   },
+    { label: 'Small Deal',      range: '₹1L – ₹5L', pct: 50, count: 50, hex: '#818cf8', color: 'bg-indigo-400', light: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-200' },
+    { label: 'Very Small Deal', range: '< ₹1L',     pct: 20, count: 20, hex: '#94a3b8', color: 'bg-slate-400',  light: 'bg-slate-100',  text: 'text-slate-600',  border: 'border-slate-200'  },
+  ];
+
+  const coreKpis = [
+    { label: 'Monthly Deals Generated', value: '100',  sub: 'Total deals this month',          icon: 'trending-up',   bg: 'bg-blue-600',   textSub: 'text-blue-100' },
+    { label: 'RFQ → Deal Close Rate',   value: '15%',  sub: 'Of RFQs convert to closed deals', icon: 'target',        bg: 'bg-violet-600', textSub: 'text-violet-100' },
+    { label: 'Revenue vs Target',       value: '100%', sub: 'Team is at full target',           icon: 'bar-chart-2',   bg: 'bg-emerald-600',textSub: 'text-emerald-100' },
+    { label: 'CRM Hygiene Score',       value: '>95%', sub: 'Data quality benchmark',           icon: 'shield-check',  bg: 'bg-amber-500',  textSub: 'text-amber-100' },
+  ];
+
+  const operationalKpis = [
+    { label: 'Categorization Fill Rate', value: '99%',     sub: 'Client Category Field Filled', icon: 'pie-chart',      bg: 'bg-blue-600',   textSub:'text-blue-100' },
+    { label: 'A & B Follow-up Speed',    value: '15 Days', sub: 'Max re-engagement window',     icon: 'clock',          bg: 'bg-indigo-600', textSub:'text-indigo-100' },
+    { label: 'Sprint Leads / Week',      value: '25',      sub: 'Weekly output target',         icon: 'zap',            bg: 'bg-white',      textSub:'text-slate-400', light: true },
+    { label: 'Contacts per A/B Account', value: '3',       sub: 'Minimum before outreach',      icon: 'users',          bg: 'bg-white',      textSub:'text-slate-400', light: true },
+  ];
+
+  const rules = [
+    { title:'CRM First',              desc:'Every company must be added to Zoho CRM immediately.' },
+    { title:'Categorization',         desc:'Categorize leads as A, B, C, or D based on revenue/potential.' },
+    { title:'Target Decision Makers', desc:'Focus on Founders, CEOs, Directors, or Supply Chain Heads.' },
+    { title:'Persistent Research',    desc:'A wrong contact is not closure; find the correct person.' },
+    { title:'Service Education',      desc:"Explain all Edgistify services before marking 'No Requirement'." },
+    { title:'Mandatory Follow-ups',   desc:'Create tasks for specific dates or a 60-day default.' },
+    { title:'Next Actions',           desc:'No lead should remain idle without a task/call/retry.' },
+    { title:'Sprint Priority',        desc:'High priority: Target 25 Sprint leads per week.' },
+  ];
+
+  return (
+    <div className="space-y-8 animate-in">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Guidelines & Performance KPIs</h1>
+        <p className="text-slate-500 text-sm">Core standards and measurable targets for operational success.</p>
+      </div>
+
+      {/* ── Core KPI Cards ── */}
+      <div>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Core Performance Metrics</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {coreKpis.map((k,i)=>(
+            <div key={i} className={`${k.bg} p-6 rounded-2xl shadow-md`}>
+              <div className="flex justify-between items-start mb-3">
+                <p className={`${k.textSub} text-[10px] font-bold uppercase tracking-wider leading-tight max-w-[120px]`}>{k.label}</p>
+                <Icon name={k.icon} size={16} className={`${k.textSub} flex-shrink-0`}/>
+              </div>
+              <h3 className={`text-3xl font-black ${k.bg==='bg-white'?'text-slate-800':'text-white'}`}>{k.value}</h3>
+              <p className={`text-[10px] ${k.textSub} mt-1 uppercase tracking-wider`}>{k.sub}</p>
+            </div>
+          ))}
         </div>
-        <div className="text-center">
-          <p className="text-3xl font-black text-white">15</p>
-          <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Days max re-engagement (A/B)</p>
+      </div>
+
+      {/* ── Deal Breakdown ── */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Monthly Deal Mix</p>
+            <h2 className="text-xl font-black text-slate-900">100 Deals Generated</h2>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] text-slate-400 uppercase tracking-wider">Close Rate</p>
+            <p className="text-2xl font-black text-violet-600">15%</p>
+            <p className="text-[10px] text-slate-400">RFQ → Deal</p>
+          </div>
         </div>
-        <div className="text-center">
-          <p className="text-3xl font-black text-white">60</p>
-          <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Days default follow-up task</p>
+
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          {/* Donut */}
+          <div className="flex-shrink-0">
+            <DonutChart data={dealBreakdown} size={200} thickness={40}/>
+          </div>
+
+          {/* Legend cards */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+            {dealBreakdown.map((d,i)=>(
+              <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${d.light} ${d.border}`}>
+                <div className="w-3 h-3 rounded-full flex-shrink-0" style={{backgroundColor: d.hex}}></div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-xs font-black ${d.text} leading-none`}>{d.label}</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">{d.range}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-base font-black text-slate-800 leading-none">{d.count}</p>
+                  <p className={`text-[10px] font-bold ${d.text}`}>{d.pct}%</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="text-center">
-          <p className="text-3xl font-black text-white">25</p>
-          <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">Sprint leads per week</p>
+      </div>
+
+      {/* ── Operational KPIs ── */}
+      <div>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Operational Standards</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {operationalKpis.map((k,i)=>(
+            <div key={i} className={`${k.bg} p-6 rounded-2xl ${k.light?'border-2 border-slate-100':'shadow-md'}`}>
+              <div className="flex justify-between items-start mb-3">
+                <p className={`${k.textSub} text-[10px] font-bold uppercase tracking-wider leading-tight max-w-[120px]`}>{k.label}</p>
+                <Icon name={k.icon} size={16} className={`${k.textSub} flex-shrink-0`}/>
+              </div>
+              <h3 className={`text-3xl font-black ${k.light?'text-slate-800':'text-white'}`}>{k.value}</h3>
+              <p className={`text-[10px] ${k.textSub} mt-1 uppercase tracking-wider`}>{k.sub}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Rules + Quality ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <div className="flex items-center gap-2 mb-4"><Icon name="clipboard-check" className="text-blue-600"/><h2 className="text-xl font-bold">Golden Rules</h2></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {rules.map((r,i)=>(
+              <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 flex gap-3 items-center hover:border-blue-200 transition-colors">
+                <div className="bg-slate-100 text-slate-500 font-bold w-6 h-6 flex items-center justify-center rounded-full text-[10px] shrink-0">{i+1}</div>
+                <div>
+                  <h4 className="font-bold text-sm text-slate-800 leading-none mb-1">{r.title}</h4>
+                  <p className="text-[11px] text-slate-500 leading-tight">{r.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center gap-2 mb-4"><Icon name="shield-check" className="text-emerald-600"/><h2 className="text-xl font-bold">Quality Standards</h2></div>
+          <div className="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl space-y-4">
+            {[
+              ['CRM Integrity','99% categorization is strictly monitored via audit reports.'],
+              ['Velocity','A & B leads must be re-engaged every 15 days to maintain sales momentum.'],
+              ['Exhaustive Outreach','Every service must be pitch-verified before disqualification.'],
+            ].map(([t,d],i)=>(
+              <div key={i} className="flex gap-3">
+                <Icon name="check" size={18} className="text-emerald-600 mt-1 shrink-0"/>
+                <p className="text-sm text-emerald-900 leading-relaxed"><strong>{t}:</strong> {d}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -390,50 +507,23 @@ const OutreachGuidePage = () => {
 
 // ── MAIN APP ─────────────────────────────────────────────────────────
 const App = () => {
-  const [tab, setTab] = useState('flow');
-  const [sp,  setSp]  = useState(0);
+  const [tab, setTab] = useState('outreach');
   const pdfDownload = "https://drive.google.com/uc?export=download&id=14nzhPHaAj9EGxET2OgJQjkbaLE48jrD4";
 
-  const procs = [
-    {id:'research',    title:"Market Research",   icon:"search",         color:"blue",    short:"Identify & Categorize",
-     details:["Identify high-potential companies via Tracxn/Google.","CRM First: Add company to Zoho CRM immediately.","Categorization: Must mark as A, B, C, or D using Gemini Tool.","Identify at least 3 leads for A & B category accounts at this stage."],
-     checkpoint:"Remember: Categorization is mandatory. Do not enter leads into CRM without Gemini tool verification."},
-    {id:'outreach',    title:"Outreach",           icon:"phone-call",     color:"indigo",  short:"Connect & Engage",
-     details:["Enrich contact data using Lusha or SignalHire.","Target Decision Makers only (Founders, CEO, Supply Chain Heads).","Identify Sales Hook / Trigger Events before calling.","Initial contact to introduce Edgistify services."],
-     checkpoint:"Targeting the wrong person wastes time. If the Founder isn't available, find the Supply Chain Head."},
-    {id:'follow-up',   title:"Follow Up",          icon:"calendar-clock", color:"amber",   short:"Task Persistence",
-     details:["If client gives a timeline: Create task for that exact date.","If no timeline: Create mandatory follow-up task after 60 days.","No lead should remain idle without a scheduled next action.","Persistent research: If contact is wrong, find the correct person."],
-     checkpoint:"The 60-day rule is non-negotiable for leads with no timeline. Persistence leads to conversion."},
-    {id:'qualification',title:"Qualification",     icon:"check-circle",   color:"emerald", short:"Convert & Close",
-     details:["MANDATORY: Explain all Edgistify services before marking 'No Requirement'.","Verify Lead to Qualification conversion metrics.","Confirm requirement fit and logistics relevance.","Schedule Demo or mark as Qualified in CRM."],
-     checkpoint:"Accepting 'No Requirement' without explaining the full service portfolio is a process violation."},
-  ];
-
-  const rules = [
-    {title:"CRM First",               desc:"Every company must be added to Zoho CRM immediately."},
-    {title:"Categorization",          desc:"Categorize leads as A, B, C, or D based on revenue/potential."},
-    {title:"Target Decision Makers",  desc:"Focus on Founders, CEOs, Directors, or Supply Chain Heads."},
-    {title:"Persistent Research",     desc:"A wrong contact is not closure; find the correct person."},
-    {title:"Service Education",       desc:"Explain all Edgistify services before marking 'No Requirement'."},
-    {title:"Mandatory Follow-ups",    desc:"Create tasks for specific dates or a 60-day default."},
-    {title:"Next Actions",            desc:"No lead should remain idle without a task/call/retry."},
-    {title:"Sprint Priority",         desc:"High priority: Target 25 Sprint leads per week."},
-  ];
-
   const tools = [
-    {name:"Full Workflow PDF",      type:"Official Guide", url:pdfDownload, use:"Complete Process Flowchart & Visuals", download:true},
-    {name:"Client Category Tool",   type:"Gemini",         url:"https://gemini.google.com/gem/1Y8ZoCIIZ1nEJP6kv6vIPs8gmH6l0rA7n", use:"Category, Logistics Relevance"},
-    {name:"Sales Hook Tool",        type:"Gemini",         url:"https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YIFhiA2FYTtS1XbA", use:"Trigger Events, Outreach Hooks"},
-    {name:"Lusha",                  type:"Enrichment",     url:"https://www.lusha.com",        use:"Mobile numbers, Email IDs"},
-    {name:"SignalHire",             type:"Enrichment",     url:"https://www.signalhire.com",    use:"Decision maker info"},
-    {name:"Tracxn",                 type:"Research",       url:"https://tracxn.com",            use:"Startup data, Revenue estimates"},
+    { name:'Full Workflow PDF',       type:'Official Guide',    url:pdfDownload,                                                               use:'Complete Process Flowchart & Visuals',                    download:true },
+    { name:'Edgistify Sales Portal',  type:'Internal Platform', url:'https://sales.edgistify.com/',                                            use:'Sales pipeline, lead tracking & internal sales operations' },
+    { name:'Client Category Tool',    type:'Gemini',            url:'https://gemini.google.com/gem/1Y8ZoCIIZ1nEJP6kv6vIPs8gmH6l0rA7n',        use:'Category, Logistics Relevance' },
+    { name:'Sales Hook Tool',         type:'Gemini',            url:'https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YIFhiA2FYTtS1XbA',        use:'Trigger Events, Outreach Hooks' },
+    { name:'Lusha',                   type:'Enrichment',        url:'https://www.lusha.com',                                                   use:'Mobile numbers, Email IDs' },
+    { name:'SignalHire',              type:'Enrichment',        url:'https://www.signalhire.com',                                              use:'Decision maker info' },
+    { name:'Tracxn',                  type:'Research',          url:'https://tracxn.com',                                                      use:'Startup data, Revenue estimates' },
   ];
 
   const tabs = [
-    {key:'flow',       label:'Process Flow',      icon:'layout-list'},
-    {key:'outreach',   label:'Outreach Guide',    icon:'book-open'},
-    {key:'guidelines', label:'Guidelines & KPIs', icon:'bar-chart-2'},
-    {key:'tools',      label:'Toolkit',           icon:'wrench'},
+    { key:'outreach',   label:'Outreach Guide',    icon:'book-open'  },
+    { key:'guidelines', label:'Guidelines & KPIs', icon:'bar-chart-2'},
+    { key:'tools',      label:'Toolkit',           icon:'wrench'     },
   ];
 
   return (
@@ -457,108 +547,10 @@ const App = () => {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {tab==='outreach'   && <OutreachGuidePage/>}
+        {tab==='guidelines' && <GuidelinesPage/>}
 
-        {/* ── PROCESS FLOW ── */}
-        {tab==='flow'&&(
-          <div className="space-y-8 animate-in">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-bold">Standard Operating Procedure</h1>
-                <p className="text-slate-500 text-sm">Interactive guide for the lead qualification cycle.</p>
-              </div>
-              <a href={pdfDownload} download className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all">
-                <Icon name="download" size={16}/> Download PDF
-              </a>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {procs.map((p,i)=>(
-                <button key={p.id} onClick={()=>setSp(i)} className={`group relative p-6 rounded-2xl border-2 transition-all text-left ${sp===i?`border-${p.color}-500 bg-${p.color}-50 shadow-lg`:'border-slate-200 bg-white hover:border-slate-300'}`}>
-                  <div className={`mb-3 p-3 rounded-xl inline-block ${sp===i?`bg-${p.color}-600 text-white`:'bg-slate-100 text-slate-500'}`}><Icon name={p.icon} size={24}/></div>
-                  <h3 className="font-bold text-lg leading-tight mb-1 text-slate-800">{p.title}</h3>
-                  <p className={`text-xs ${sp===i?'text-slate-700':'text-slate-500'}`}>{p.short}</p>
-                </button>
-              ))}
-            </div>
-            <div className="p-8 rounded-3xl bg-white border-2 border-slate-100 shadow-xl">
-              <div className="flex items-center gap-4 mb-6">
-                <div className={`p-3 rounded-xl bg-${procs[sp].color}-600 text-white`}><Icon name={procs[sp].icon} size={28}/></div>
-                <div>
-                  <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{procs[sp].title} Stage</h2>
-                  <p className="text-slate-500 text-sm">Core requirements for this phase</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  {procs[sp].details.map((d,i)=>(
-                    <div key={i} className="flex gap-4 items-start">
-                      <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs">{i+1}</div>
-                      <p className="text-slate-700 leading-relaxed">{d}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                  <h4 className="font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2 text-slate-800"><Icon name="alert-circle" size={16}/> Critical Checkpoint</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed italic">{procs[sp].checkpoint}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── OUTREACH GUIDE ── */}
-        {tab==='outreach'&&<OutreachGuidePage/>}
-
-        {/* ── GUIDELINES ── */}
-        {tab==='guidelines'&&(
-          <div className="space-y-8 animate-in">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">Guidelines & Performance KPIs</h1>
-              <p className="text-slate-500 text-sm">Core standards and measurable targets for operational success.</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-blue-600 text-white p-6 rounded-2xl shadow-lg">
-                <div className="flex justify-between items-start mb-2"><p className="text-blue-100 text-[10px] font-bold uppercase">Categorization</p><Icon name="pie-chart" size={16} className="text-blue-200"/></div>
-                <h3 className="text-3xl font-black">99%</h3><p className="text-[10px] text-blue-100 mt-1 uppercase tracking-wider">Client Category Field Filled</p>
-              </div>
-              <div className="bg-indigo-600 text-white p-6 rounded-2xl shadow-lg">
-                <div className="flex justify-between items-start mb-2"><p className="text-indigo-100 text-[10px] font-bold uppercase">Follow-up Speed</p><Icon name="clock" size={16} className="text-indigo-200"/></div>
-                <h3 className="text-3xl font-black">15 Days</h3><p className="text-[10px] text-indigo-100 mt-1 uppercase tracking-wider">Max for Category A & B</p>
-              </div>
-              <div className="bg-white border-2 border-slate-100 p-6 rounded-2xl">
-                <div className="flex justify-between items-start mb-2"><p className="text-slate-400 text-[10px] font-bold uppercase">Weekly Output</p><Icon name="zap" size={16} className="text-blue-500"/></div>
-                <h3 className="text-3xl font-black text-slate-800">25</h3><p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Sprint Leads / Week</p>
-              </div>
-              <div className="bg-white border-2 border-slate-100 p-6 rounded-2xl">
-                <div className="flex justify-between items-start mb-2"><p className="text-slate-400 text-[10px] font-bold uppercase">Account Depth</p><Icon name="users" size={16} className="text-blue-500"/></div>
-                <h3 className="text-3xl font-black text-slate-800">3</h3><p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Contacts Per A/B Account</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-4">
-                <div className="flex items-center gap-2 mb-2"><Icon name="clipboard-check" className="text-blue-600"/><h2 className="text-xl font-bold">10 Golden Rules</h2></div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {rules.map((r,i)=>(
-                    <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 flex gap-3 items-center hover:border-blue-200 transition-colors">
-                      <div className="bg-slate-100 text-slate-500 font-bold w-6 h-6 flex items-center justify-center rounded-full text-[10px] shrink-0">{i+1}</div>
-                      <div><h4 className="font-bold text-sm text-slate-800 leading-none mb-1">{r.title}</h4><p className="text-[11px] text-slate-500 leading-tight">{r.desc}</p></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-4"><Icon name="shield-check" className="text-emerald-600"/><h2 className="text-xl font-bold">Quality Standards</h2></div>
-                <div className="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl space-y-4">
-                  <div className="flex gap-3"><Icon name="check" size={18} className="text-emerald-600 mt-1 shrink-0"/><p className="text-sm text-emerald-900 leading-relaxed"><strong>CRM Integrity:</strong> 99% categorization is strictly monitored via audit reports.</p></div>
-                  <div className="flex gap-3"><Icon name="check" size={18} className="text-emerald-600 mt-1 shrink-0"/><p className="text-sm text-emerald-900 leading-relaxed"><strong>Velocity:</strong> A & B leads must be re-engaged every 15 days to maintain sales momentum.</p></div>
-                  <div className="flex gap-3"><Icon name="check" size={18} className="text-emerald-600 mt-1 shrink-0"/><p className="text-sm text-emerald-900 leading-relaxed"><strong>Exhaustive Outreach:</strong> Every service must be pitch-verified before disqualification.</p></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── TOOLKIT ── */}
-        {tab==='tools'&&(
+        {tab==='tools' && (
           <div className="space-y-6 animate-in">
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Operational Toolkit</h1>
@@ -574,9 +566,9 @@ const App = () => {
                   <div className="p-4 flex flex-col flex-1">
                     <p className="text-xs text-slate-500 mb-6 flex-1 leading-relaxed">{tool.use}</p>
                     <a href={tool.url} {...(tool.download?{download:true}:{target:'_blank'})}
-                       className="flex items-center justify-center gap-2 text-center py-2.5 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-800 text-xs font-bold rounded-lg transition-all">
-                      {tool.download&&<Icon name="download" size={13}/>}
-                      {tool.download?'Download PDF':'Open Resource'}
+                       className="flex items-center justify-center gap-2 py-2.5 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-800 text-xs font-bold rounded-lg transition-all">
+                      {tool.download && <Icon name="download" size={13}/>}
+                      {tool.download ? 'Download PDF' : 'Open Resource'}
                     </a>
                   </div>
                 </div>
