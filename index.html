@@ -3,593 +3,827 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edgistify Lead Qualification Dashboard</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
+<title>Edgistify · Sales Operations</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-  body { font-family:'Inter',sans-serif; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-  .animate-in { animation:fadeIn 0.4s ease-out forwards; }
-  @keyframes fillBar { from { width: 0% } to { width: var(--target-width) } }
-  .fill-bar { animation: fillBar 1s ease-out forwards; }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f8fb;--surface:#fff;--surface2:#eef5fa;--border:#c9dff0;
+  --blue:#2596be;--blue2:#1a7a9e;--blue-light:#e8f5fb;--blue-pale:#f0f8fd;
+  --text:#0f172a;--text2:#3d5a72;--text3:#8aafc4;
+  --r:14px;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+.nav{background:var(--blue);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px}
+.nav-logo{display:flex;align-items:center;gap:10px;color:#fff;font-size:16px;font-weight:800;letter-spacing:-.02em}
+.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.9)}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
+.nav-tab:hover{color:#fff}
+.nav-tab.active{background:rgba(255,255,255,.18);color:#fff;font-weight:700}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:28px 24px}
+
+/* PAGE */
+.page{display:none}.page.active{display:block}
+
+/* SUB-TABS */
+.subtab-bar{display:flex;gap:4px;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:4px;width:fit-content;margin-bottom:24px}
+.subtab{padding:7px 18px;border-radius:8px;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;transition:all .2s}
+.subtab:hover{background:var(--surface2);color:var(--text)}
+.subtab.active{background:var(--blue);color:#fff}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:24px}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:4px}
+.page-header p{font-size:13px;color:var(--text2)}
+
+/* ════ WIZARD ════ */
+.wiz-wrap{max-width:640px}
+.wiz-trail{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:16px;min-height:24px}
+.wiz-crumb{font-size:10px;font-weight:700;color:var(--text3);background:var(--surface);border:1.5px solid var(--border);padding:2px 10px;border-radius:99px}
+.wiz-sep{color:var(--border);font-size:12px;margin:0 1px}
+
+.wiz-card{background:var(--surface);border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(37,150,190,.12);border:2px solid var(--border)}
+.wiz-head{padding:22px 24px 16px;border-bottom:1px solid var(--border)}
+.wiz-lbl{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.wiz-q{font-size:20px;font-weight:900;color:var(--text);letter-spacing:-.02em;line-height:1.2;margin-bottom:5px}
+.wiz-sub{font-size:12px;color:var(--text2);line-height:1.5}
+
+.wiz-info{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:7px}
+.wiz-info-row{display:flex;align-items:flex-start;gap:9px}
+.wiz-info-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:7px}
+.wiz-info-txt{font-size:12px;color:var(--text2);line-height:1.55}
+
+.wiz-choices{padding:16px 24px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.wiz-choice{padding:13px 16px;border-radius:11px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px}
+.wiz-choice:hover{border-color:var(--blue);transform:translateX(3px);background:var(--blue-pale)}
+.wiz-choice-label{font-size:13px;font-weight:800;color:var(--text);flex:1}
+.wiz-choice-sub{font-size:10.5px;color:var(--text3);margin-top:2px}
+.wiz-choice-arr{color:var(--text3);font-size:14px;flex-shrink:0}
+
+.wiz-foot{padding:11px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.wiz-back{background:transparent;border:1.5px solid var(--border);color:var(--text3);font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+.wiz-back:hover{border-color:var(--blue);color:var(--blue)}
+.wiz-depth{font-size:10px;color:var(--text3);font-weight:600;font-family:'JetBrains Mono',monospace}
+
+/* terminal states */
+.wiz-terminal{padding:36px 24px;text-align:center}
+.wiz-term-icon{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:22px;background:var(--blue-light)}
+.wiz-term-title{font-size:21px;font-weight:900;margin-bottom:8px;color:var(--text)}
+.wiz-term-msg{font-size:12px;color:var(--text2);line-height:1.65;max-width:380px;margin:0 auto 22px}
+.wiz-term-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.wiz-term-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif}
+
+/* ════ STEPPER (flowchart reference) ════ */
+.stepper{display:flex;flex-direction:column;gap:0;max-width:820px}
+.step-row{display:flex;gap:20px;cursor:pointer}
+.step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:42px}
+.step-circle{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border:2.5px solid var(--border);background:var(--surface);color:var(--text3);flex-shrink:0;transition:all .25s}
+.step-row.open .step-circle{border-color:var(--blue);background:var(--blue);color:#fff;box-shadow:0 0 0 5px rgba(37,150,190,.15)}
+.step-row.done .step-circle{border-color:#059669;background:#059669;color:#fff}
+.step-line{flex:1;width:2px;background:var(--border);min-height:14px;transition:background .25s}
+.step-row.done .step-line{background:#059669}
+.step-row.open .step-line{background:var(--blue)}
+.step-right{flex:1;padding-bottom:6px}
+.step-hdr{display:flex;align-items:center;gap:10px;padding:10px 0;min-height:42px}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);font-weight:700;letter-spacing:.06em}
+.step-name{font-size:15px;font-weight:800;line-height:1.2}
+.step-tag{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-left:auto;flex-shrink:0}
+.step-body{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:16px 18px;margin:0 0 18px;display:none}
+.step-row.open .step-body{display:block}
+.step-pts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.step-pt{display:flex;gap:9px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:9px}
+.step-pt-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.step-pt-txt{font-size:12px;color:var(--text2);line-height:1.5}
+.step-branch{border-radius:11px;overflow:hidden;border:2px solid var(--border);margin-top:4px;margin-bottom:12px}
+.sb-hdr{padding:7px 12px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border)}
+.sb-row{display:flex;border-bottom:1px solid var(--border)}
+.sb-row:last-child{border-bottom:none}
+.sb-cond{padding:9px 12px;font-size:11px;font-weight:700;min-width:130px;border-right:1px solid var(--border);flex-shrink:0}
+.sb-out{padding:9px 12px;font-size:11px;color:var(--text2);flex:1;line-height:1.4}
+.step-tools-row{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
+.tool-chip{display:inline-block;padding:3px 10px;border-radius:7px;font-size:10px;font-weight:700;background:var(--blue-light);color:var(--blue2);border:1.5px solid var(--border);text-decoration:none;transition:all .2s;cursor:pointer}
+.tool-chip:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.step-next-btn{margin-top:12px;padding:9px 18px;background:var(--blue);color:#e2e8f0;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s}
+.step-next-btn:hover{background:var(--blue2)}
+
+/* ════ GUIDELINES PAGE ════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.kpi-card{background:var(--surface);border-radius:14px;border:2px solid var(--border);padding:18px}
+.kpi-num{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.kpi-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.rules-card{background:var(--surface);border-radius:14px;border:2px solid var(--border);padding:20px;margin-bottom:16px}
+.rules-card h3{font-size:14px;font-weight:800;margin-bottom:14px;letter-spacing:-.01em}
+.rule-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--border)}
+.rule-row:first-of-type{border-top:none}
+.rule-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);font-weight:600;flex-shrink:0;padding-top:2px}
+.rule-txt{font-size:13px;color:var(--text2);line-height:1.55}
+.rule-txt strong{color:var(--text);font-weight:700}
+.section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:12px}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:24px}
+.donut-legend{display:flex;flex-direction:column;gap:9px;flex:1}
+.legend-row{display:flex;align-items:center;gap:9px}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.legend-label{font-size:12px;color:var(--text2);flex:1}
+.legend-val{font-size:12px;font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace}
+
+/* ════ TOOLKIT PAGE ════ */
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tool-card{background:var(--surface);border-radius:16px;border:2px solid var(--border);overflow:hidden;display:flex;flex-direction:column;transition:all .2s}
+.tool-card:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(37,150,190,.12);transform:translateY(-2px)}
+.tool-card-top{padding:14px 16px;border-bottom:2px solid var(--border);background:var(--surface2)}
+.tool-type-badge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-bottom:6px}
+.tool-name{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.tool-card-body{padding:14px 16px;flex:1;display:flex;flex-direction:column}
+.tool-desc{font-size:12px;color:var(--text2);line-height:1.6;flex:1;margin-bottom:16px}
+.tool-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;background:var(--surface2);border:2px solid var(--border);border-radius:10px;font-size:12px;font-weight:700;color:var(--text);text-decoration:none;transition:all .2s;cursor:pointer}
+.tool-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* FOOTER */
+footer{padding:28px 24px;text-align:center;color:var(--text3);font-size:11px;border-top:1px solid var(--border);margin-top:40px}
 </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
-<div id="root"></div>
-<script type="text/babel">
-const {useState,useEffect} = React;
+<body>
 
-const Icon = ({name,size=20,className=''}) => {
-  useEffect(()=>{ if(window.lucide) window.lucide.createIcons(); },[name]);
-  return <i data-lucide={name} style={{width:size,height:size}} className={className}></i>;
-};
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-dot"></div>
+      Edgistify &nbsp;<span style="font-weight:400;font-size:13px;color:#64748b">Sales Operations</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('outreach',this)">Outreach Guide</button>
+      <button class="nav-tab" onclick="showPage('guidelines',this)">Guidelines &amp; KPIs</button>
+      <button class="nav-tab" onclick="showPage('toolkit',this)">Toolkit</button>
+    </div>
+  </div>
+</nav>
 
-// ── OUTREACH GUIDE PAGE ──────────────────────────────────────────────
-const OutreachGuidePage = () => {
-  const steps = [
-    {
-      num: '01', title: 'Identify the Lead Source', icon: 'map-pin', color: 'blue',
-      desc: 'Every lead enters through one of two tracks. Identify which before proceeding.',
-      twoTrack: true,
-      tracks: [
-        {
-          label: 'Track 1 — Sprint', badge: 'bg-blue-100 text-blue-700 border-blue-200',
-          bar: 'bg-blue-500', icon: 'trending-up', sub: 'Management-assigned leads',
-          points: [
-            'Leads are assigned directly by management — these are pre-vetted, high-conversion-potential accounts.',
-            'Source is inbound, referred, or flagged by leadership based on strategic fit.',
-            'Skip the Sales Research Sprint — proceed straight to Step 3 (Trigger Events & Sales Hook).',
-            'Log the lead in Zoho CRM immediately with source marked as "Sprint".',
-          ],
-          action: 'Go to Step 3 → Check Trigger Events & Find a Sales Hook',
-        },
-        {
-          label: 'Track 2 — Sales Research', badge: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-          bar: 'bg-indigo-500', icon: 'search', sub: 'Self-sourced outbound leads',
-          points: [
-            'Rep independently identifies and sources leads via Tracxn, Google, LinkedIn, or industry databases.',
-            'No pre-vetting — the rep owns the research and qualification from scratch.',
-            'Must complete the full Sales Research Sprint (Step 2) before progressing.',
-            'Log the lead in Zoho CRM immediately with source marked as "Research".',
-          ],
-          action: 'Go to Step 2 → Sales Research Sprint',
-        },
-      ],
-      mergeNote: 'Both tracks merge at Step 5 — Outreach',
-    },
-    {
-      num: '02', title: 'Sales Research Sprint', icon: 'search', color: 'indigo',
-      desc: 'Track 2 only. Conduct focused, time-boxed research before any outreach.',
-      trackBadge: 'Track 2 — Sales Research Only',
-      items: [
-        'Company size, estimated revenue, industry vertical, and geographic presence.',
-        'Tech stack or logistics setup — what tools or 3PLs are they currently using?',
-        'Key decision makers: Founder, CEO, VP Supply Chain, or Head of Logistics.',
-        'Recent company news: funding rounds, expansions, leadership changes, new product lines.',
-        'Job postings that signal growth or a logistics need.',
-        'Use Tracxn for startup data and revenue estimates.',
-      ],
-    },
-    {
-      num: '03', title: 'Categorise the Lead — A, B, C, or D', icon: 'tag', color: 'violet',
-      desc: 'Both tracks. Categorisation is mandatory. Use the Gemini Category Tool for every lead.',
-      sub: true,
-      categories: [
-        {
-          label: 'Category A', badge: 'bg-emerald-100 text-emerald-700 border-emerald-200', bar: 'bg-emerald-500',
-          rules: [
-            'High-revenue company with clear logistics volume (typically ₹50Cr+ turnover).',
-            'Active supply chain operations — warehouse, fulfilment, or last-mile activity.',
-            'Decision maker is reachable and title-verifiable (Founder, CEO, SCM Head).',
-            'Operates in a sector Edgistify directly serves: D2C, FMCG, pharma, e-commerce, retail.',
-            'Shows a trigger event: recent funding, expansion, or new distribution channel.',
-          ],
-          action: 'Minimum 3 contacts identified. Follow up within 15 days. High sprint priority.',
-        },
-        {
-          label: 'Category B', badge: 'bg-blue-100 text-blue-700 border-blue-200', bar: 'bg-blue-500',
-          rules: [
-            'Mid-sized company with moderate logistics activity (₹10Cr–₹50Cr range).',
-            'Supply chain need exists but is less urgent or less defined.',
-            'Decision maker identified but may need multiple touchpoints to engage.',
-            'Sector is relevant but not a primary target vertical.',
-            'No strong trigger event, but growth trajectory is positive.',
-          ],
-          action: 'Minimum 3 contacts identified. Follow up within 15 days. Schedule 60-day re-engagement if no immediate requirement.',
-        },
-        {
-          label: 'Category C', badge: 'bg-amber-100 text-amber-700 border-amber-200', bar: 'bg-amber-400',
-          rules: [
-            'Smaller company with limited or unverified logistics volume.',
-            'Sector relevance is tangential — not a primary Edgistify use case.',
-            'Decision maker is hard to identify or not accessible.',
-            'No visible trigger event or growth signal.',
-          ],
-          action: 'Lower priority. Add to CRM but deprioritise in sprint plan. Revisit quarterly.',
-        },
-        {
-          label: 'Category D', badge: 'bg-red-100 text-red-700 border-red-200', bar: 'bg-red-400',
-          rules: [
-            'No discernible logistics requirement.',
-            'Company is too small, irrelevant sector, or already using a competing solution with a long-term contract.',
-            'No accessible decision maker after multiple research attempts.',
-          ],
-          action: 'Do not pursue. Mark as Junk in Zoho and move on.',
-        },
-      ],
-    },
-    {
-      num: '04', title: 'Check Trigger Events & Build a Sales Hook', icon: 'zap', color: 'amber',
-      desc: 'Sprint leads enter here. Every outreach call needs a reason — never call without a hook.',
-      trackBadge: 'Sprint leads start here — Both tracks continue from this point',
-      items: [
-        'Recent funding (Series A/B/C) — signals scale-up and logistics need.',
-        'New product launch or SKU expansion — fulfilment complexity increases.',
-        'Geographic expansion — new warehousing or last-mile requirements.',
-        'Leadership hire in supply chain or operations — new decision maker is open to change.',
-        'Job postings for logistics, warehouse, or ops roles — active pain point.',
-        'News coverage mentioning delivery issues, delays, or scaling challenges.',
-        'Use the Gemini Sales Hook Tool to generate a contextualised hook for each lead.',
-      ],
-    },
-    {
-      num: '05', title: 'Add to Sprint Plan Module in Zoho', icon: 'database', color: 'slate',
-      desc: 'Both tracks are now unified. Log everything before you pick up the phone.',
-      trackBadge: 'Both tracks fully merged from here onwards',
-      items: [
-        'Create or update the company record in Zoho CRM with source, category, and all research notes.',
-        'Add the sprint plan entry: company, contact names, trigger event, and your planned sales hook.',
-        'For A & B category accounts: identify and log at least 3 contacts before outreach begins.',
-        'Enrich contact data using Lusha (mobile numbers, emails) or SignalHire (decision maker profiles).',
-        'Set the initial outreach task — no lead should enter the sprint without a scheduled action.',
-      ],
-    },
-    {
-      num: '06', title: 'Outreach & Contact Rules', icon: 'phone-call', color: 'indigo',
-      desc: 'Who you call matters as much as what you say.',
-      items: [
-        'Target decision makers only: Founders, CEOs, Directors, VP/Head of Supply Chain or Logistics.',
-        'A wrong contact is not an excuse to close — if you reached the wrong person, find the right one.',
-        'Use your trigger event as the opening line — make the reason for calling immediately clear.',
-        'If the outreach fails: retry with a different channel (call → email → LinkedIn) before escalating.',
-        'If connected but not the relevant contact: find the right person and loop back. Do not mark as junk.',
-        'If you exhaust 3 contacts at an account with no requirement: mark as Junk.',
-      ],
-    },
-    {
-      num: '07', title: 'Requirement Check & Qualification', icon: 'check-circle', color: 'emerald',
-      desc: 'Never mark "No Requirement" without a full service walkthrough.',
-      items: [
-        'MANDATORY: Explain all Edgistify services before deciding there is no requirement.',
-        'Services include: warehousing, fulfilment, last-mile delivery, reverse logistics, tech platform.',
-        'If requirement confirmed: mark as Qualified in Zoho and schedule a demo immediately.',
-        'If no immediate requirement but A or B category: do not junk — move to follow-up.',
-        'If no requirement and C or D category: mark as Junk.',
-      ],
-    },
-    {
-      num: '08', title: 'Follow-Up Rules', icon: 'calendar-clock', color: 'amber',
-      desc: 'No lead should ever sit idle without a next action.',
-      items: [
-        'If the client gives a specific follow-up date: create a task for that exact day in Zoho.',
-        'If no date is given: create a mandatory 60-day follow-up task.',
-        'A & B category leads must be re-engaged every 15 days to maintain momentum.',
-        'If a contact goes cold, try a different decision maker at the same account before closing.',
-        'Every task must have a note: last conversation summary, current status, and next objective.',
-      ],
-    },
-  ];
+<div class="main">
 
-  const stepColors = {
-    blue:   { bg:'bg-blue-50',   border:'border-blue-100',  icon:'bg-blue-600',   num:'text-blue-400',  tag:'bg-blue-100 text-blue-700' },
-    indigo: { bg:'bg-indigo-50', border:'border-indigo-100',icon:'bg-indigo-600', num:'text-indigo-400',tag:'bg-indigo-100 text-indigo-700' },
-    violet: { bg:'bg-violet-50', border:'border-violet-100',icon:'bg-violet-600', num:'text-violet-400',tag:'bg-violet-100 text-violet-700' },
-    amber:  { bg:'bg-amber-50',  border:'border-amber-100', icon:'bg-amber-500',  num:'text-amber-400', tag:'bg-amber-100 text-amber-700' },
-    slate:  { bg:'bg-slate-50',  border:'border-slate-200', icon:'bg-slate-600',  num:'text-slate-400', tag:'bg-slate-100 text-slate-600' },
-    emerald:{ bg:'bg-emerald-50',border:'border-emerald-100',icon:'bg-emerald-600',num:'text-emerald-400',tag:'bg-emerald-100 text-emerald-700' },
-  };
+  <!-- ═══════════════════════════════════ OUTREACH PAGE -->
+  <div id="page-outreach" class="page active">
 
-  return (
-    <div className="animate-in space-y-6">
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Lead Enrichment & Outreach Guide</h1>
-          <p className="text-slate-500 text-sm mt-1">Step-by-step process for researching, categorising, and qualifying leads.</p>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">8 Steps</span>
-          <div className="w-px h-4 bg-slate-200"></div>
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">4 Categories</span>
+    <div class="page-header">
+      <h1>Outreach Guide</h1>
+      <p>Step through the process live or use the reference stepper below.</p>
+    </div>
+
+    <div class="subtab-bar">
+      <button class="subtab active" onclick="showSubtab('wizard',this)">Live Wizard</button>
+      <button class="subtab" onclick="showSubtab('stepper',this)">Process Reference</button>
+    </div>
+
+    <!-- WIZARD -->
+    <div id="sub-wizard" class="wiz-wrap">
+      <div id="wiz-trail" class="wiz-trail"></div>
+      <div id="wiz-stage"></div>
+    </div>
+
+    <!-- STEPPER -->
+    <div id="sub-stepper" style="display:none">
+      <div class="stepper" id="stepper-list"></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════ GUIDELINES PAGE -->
+  <div id="page-guidelines" class="page">
+    <div class="page-header">
+      <h1>Guidelines &amp; KPIs</h1>
+      <p>Performance targets, deal mix, and non-negotiable rules for the sales team.</p>
+    </div>
+
+    <div class="section-title">Monthly KPI Targets</div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div class="rules-card">
+        <h3>Deal Mix Target</h3>
+        <div class="donut-wrap">
+          <svg width="110" height="110" viewBox="0 0 110 110" id="donut-svg"></svg>
+          <div class="donut-legend" id="donut-legend"></div>
         </div>
       </div>
-
-      <div className="space-y-4">
-        {steps.map((step, i) => {
-          const c = stepColors[step.color];
-          return (
-            <div key={i} className={`rounded-2xl border ${c.border} ${c.bg} overflow-hidden`}>
-              <div className="flex items-center gap-4 px-6 py-4 border-b border-inherit">
-                <div className={`w-9 h-9 rounded-xl ${c.icon} text-white flex items-center justify-center flex-shrink-0`}>
-                  <Icon name={step.icon} size={17}/>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className={`text-[10px] font-black uppercase tracking-widest ${c.num}`}>Step {step.num}</span>
-                  <h2 className="text-base font-black text-slate-900 leading-tight">{step.title}</h2>
-                </div>
-                <span className={`hidden md:block text-[11px] font-medium px-3 py-1 rounded-full border ${c.tag} flex-shrink-0`}>{step.desc}</span>
-              </div>
-              <div className="px-6 py-5">
-                {step.trackBadge && (
-                  <div className="mb-4">
-                    <span className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider border ${
-                      step.color==='amber'?'bg-amber-100 text-amber-700 border-amber-200':
-                      step.color==='indigo'?'bg-indigo-100 text-indigo-700 border-indigo-200':
-                      'bg-slate-100 text-slate-600 border-slate-200'
-                    }`}>{step.trackBadge}</span>
-                  </div>
-                )}
-                {step.twoTrack && (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {step.tracks.map((track, j) => (
-                        <div key={j} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                          <div className={`h-1 ${track.bar}`}></div>
-                          <div className="p-4">
-                            <div className="flex items-center gap-2 mb-3">
-                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${track.bar} text-white flex-shrink-0`}><Icon name={track.icon} size={13}/></div>
-                              <div>
-                                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${track.badge}`}>{track.label}</span>
-                                <p className="text-[11px] text-slate-500 mt-0.5">{track.sub}</p>
-                              </div>
-                            </div>
-                            <div className="space-y-2 mb-4">
-                              {track.points.map((pt, k) => (
-                                <div key={k} className="flex items-start gap-2">
-                                  <Icon name="check" size={12} className="text-slate-400 mt-0.5 flex-shrink-0"/>
-                                  <p className="text-xs text-slate-600 leading-relaxed">{pt}</p>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
-                              <Icon name="arrow-right" size={12} className="text-blue-500 flex-shrink-0"/>
-                              <p className="text-[11px] font-bold text-blue-600">{track.action}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-3 bg-slate-900 rounded-xl px-5 py-3">
-                      <Icon name="git-merge" size={16} className="text-slate-400 flex-shrink-0"/>
-                      <p className="text-sm font-bold text-white">{step.mergeNote}</p>
-                    </div>
-                  </div>
-                )}
-                {step.items && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-                    {step.items.map((item, j) => (
-                      <div key={j} className="flex items-start gap-2.5">
-                        <div className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${c.icon}`}></div>
-                        <p className="text-sm text-slate-700 leading-relaxed">{item}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {step.categories && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {step.categories.map((cat, j) => (
-                      <div key={j} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                        <div className={`h-1 ${cat.bar}`}></div>
-                        <div className="p-4">
-                          <span className={`text-xs font-black px-3 py-1 rounded-full border ${cat.badge}`}>{cat.label}</span>
-                          <div className="space-y-1.5 my-3">
-                            {cat.rules.map((rule, k) => (
-                              <div key={k} className="flex items-start gap-2">
-                                <Icon name="check" size={12} className="text-slate-400 mt-0.5 flex-shrink-0"/>
-                                <p className="text-xs text-slate-600 leading-relaxed">{rule}</p>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="pt-3 border-t border-slate-100">
-                            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Action</p>
-                            <p className="text-xs text-slate-700 leading-relaxed">{cat.action}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="bg-slate-900 rounded-2xl p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[['3','Min contacts for A & B'],['15','Days max re-engagement (A/B)'],['60','Days default follow-up task'],['25','Sprint leads per week']].map(([n,l],i)=>(
-          <div key={i} className="text-center">
-            <p className="text-3xl font-black text-white">{n}</p>
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-1">{l}</p>
-          </div>
-        ))}
+      <div class="rules-card">
+        <h3>Sprint Targets</h3>
+        <div class="rule-row"><span class="rule-num">01</span><span class="rule-txt"><strong>25 sprint leads</strong> per week minimum — assigned by management.</span></div>
+        <div class="rule-row"><span class="rule-num">02</span><span class="rule-txt"><strong>3 contacts minimum</strong> for all A &amp; B accounts before any Junk decision.</span></div>
+        <div class="rule-row"><span class="rule-num">03</span><span class="rule-txt"><strong>60 days</strong> is the default follow-up task when no date is given.</span></div>
+        <div class="rule-row"><span class="rule-num">04</span><span class="rule-txt"><strong>15-day</strong> re-engagement window for A &amp; B leads after follow-up task fires.</span></div>
       </div>
     </div>
-  );
+
+    <div class="rules-card">
+      <h3>Non-Negotiable Rules</h3>
+      <div id="golden-rules"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ TOOLKIT PAGE -->
+  <div id="page-toolkit" class="page">
+    <div class="page-header">
+      <h1>Operational Toolkit</h1>
+      <p>Approved software and AI tools for the full lead enrichment workflow.</p>
+    </div>
+    <div class="tools-grid" id="tools-grid"></div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Edgistify Internal Operations &nbsp;·&nbsp; Lead Qualification Framework v4.0 &nbsp;·&nbsp; Internal Use Only</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════ */
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showSubtab(id, btn) {
+  document.getElementById('sub-wizard').style.display = id === 'wizard' ? '' : 'none';
+  document.getElementById('sub-stepper').style.display = id === 'stepper' ? '' : 'none';
+  document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════
+   WIZARD
+═══════════════════════════════════════════════════════ */
+const WIZ = {
+  start: {
+    title: 'New Lead Arrives',
+    sub: 'Where did this lead come from?',
+    info: ['Check whether this is a Sprint (management-assigned) lead or one you sourced yourself.'],
+    choices: [
+      { label: 'Sprint Lead', sub: 'Management assigned, pre-vetted', next: 'sprint_trigger' },
+      { label: 'Self-Sourced Lead', sub: 'Found via Tracxn / LinkedIn / database', next: 'research' },
+    ]
+  },
+  research: {
+    title: 'Sales Research Sprint',
+    sub: 'Complete your research before moving forward.',
+    info: [
+      'Company size, revenue, vertical and geographic presence.',
+      'Identify: Founder / CEO / VP Supply Chain / Head of Logistics.',
+      'Recent signals: funding, expansion, leadership hires, job postings.',
+      'Tools: Tracxn for revenue estimates · Lusha / SignalHire for contacts.',
+    ],
+    choices: [
+      { label: 'Research complete', sub: 'Company profile and DM names ready', next: 'categorise' }
+    ]
+  },
+  categorise: {
+    title: 'Categorise the Lead',
+    sub: 'Use the Client Category Gemini Tool. What category is this lead?',
+    info: [
+      'A = Rs.100Cr+ turnover · B = Rs.50–100Cr · C = Rs.10–50Cr · D = Under Rs.10Cr',
+      'Log the category in Zoho immediately after confirming.',
+    ],
+    choices: [
+      { label: 'Category A or B', sub: 'Rs.50Cr+ — high logistics potential', next: 'sprint_trigger' },
+      { label: 'Category C or D', sub: 'Under Rs.50Cr — standard priority', next: 'sprint_trigger' },
+    ]
+  },
+  sprint_trigger: {
+    title: 'Trigger Events & Sales Hook',
+    sub: 'Identify the live signal and build your opening angle.',
+    info: [
+      'Signals: recent funding / new SKU launch / geographic expansion / ops leadership hire.',
+      'Use the Sales Hook Gemini Tool to craft a personalised opening line.',
+      'Log source, category, trigger and all notes in Zoho Sprint Plan.',
+    ],
+    choices: [
+      { label: 'Hook ready — Zoho updated', sub: 'CRM logged, outreach task set', next: 'outreach' }
+    ]
+  },
+  outreach: {
+    title: 'Outreach Attempt',
+    sub: 'Call / Email / LinkedIn. Did you connect with someone?',
+    info: [
+      'Target DMs only: Founder, CEO, VP SCM, Head of Logistics.',
+      'Lead every contact with the trigger event — make it specific and relevant.',
+    ],
+    choices: [
+      { label: 'Connected — someone responded', sub: '', next: 'relevant' },
+      { label: 'No response — all channels tried', sub: '', next: 'retry_outreach' },
+    ]
+  },
+  retry_outreach: {
+    terminal: true, result: 'retry',
+    title: 'Retry Outreach',
+    msg: 'Rotate channel: call → email → LinkedIn. Update the Zoho task and try again.',
+    restartAt: 'outreach', restartLabel: 'Back to Outreach'
+  },
+  relevant: {
+    title: 'Relevant Contact?',
+    sub: 'Is the person you reached the actual decision maker?',
+    info: ['Decision maker = Founder, CEO, VP SCM, Head of Logistics, Director of Operations.'],
+    choices: [
+      { label: 'Yes — correct decision maker', sub: '', next: 'qualify' },
+      { label: 'No — wrong contact', sub: 'Gatekeeper or unrelated role', next: 'find_dm' },
+    ]
+  },
+  find_dm: {
+    terminal: true, result: 'retry',
+    title: 'Find the Right Contact',
+    msg: 'Never close because you hit a gatekeeper. Use Lusha or SignalHire to identify the correct DM and retry outreach.',
+    restartAt: 'outreach', restartLabel: 'Back to Outreach'
+  },
+  qualify: {
+    title: 'Requirement Check',
+    sub: 'Full service walkthrough completed. Was a requirement found?',
+    info: [
+      'Pitch ALL services: warehousing · fulfilment · last-mile · reverse logistics · tech platform.',
+      'Never mark No Requirement without completing the full service walkthrough.',
+    ],
+    choices: [
+      { label: 'Requirement confirmed', sub: 'At least one service line is a fit', next: 'qualified_end' },
+      { label: 'No requirement found', sub: 'Full walkthrough done, no current fit', next: 'followup_time' },
+    ]
+  },
+  qualified_end: {
+    terminal: true, result: 'qualified',
+    title: 'Qualified',
+    msg: 'Mark as Qualified in Zoho. Schedule the product demo. Update all notes before closing the task.',
+    restartAt: null
+  },
+  followup_time: {
+    title: 'Client Specified a Follow-Up Time?',
+    sub: 'Did the client give you a date to reconnect?',
+    info: ['Every lead must leave with a next action — no exceptions.'],
+    choices: [
+      { label: 'Yes — specific date given', sub: 'Client mentioned a reconnect date', next: 'task_specific' },
+      { label: 'No date provided', sub: 'Open-ended or no response', next: 'task_60' },
+    ]
+  },
+  task_specific: {
+    title: 'Task Created for Specified Date',
+    sub: 'Zoho task logged for the exact date. What is this lead\'s category?',
+    info: ['A & B leads require additional DM outreach before you can close the loop.'],
+    choices: [
+      { label: 'Category A or B', sub: 'Rs.50Cr+ — work through additional DMs', next: 'dm2' },
+      { label: 'Category C or D', sub: 'Lower priority — task is set, loop back when due', next: 'loop_cd' },
+    ]
+  },
+  task_60: {
+    title: '60-Day Task Created',
+    sub: 'Default Zoho task set for 60 days. What is this lead\'s category?',
+    info: ['A & B leads get an additional DM outreach attempt before waiting.'],
+    choices: [
+      { label: 'Category A or B', sub: 'Rs.50Cr+ — work through additional DMs', next: 'dm2' },
+      { label: 'Category C or D', sub: 'Lower priority — task is set, loop back when due', next: 'loop_cd' },
+    ]
+  },
+  loop_cd: {
+    terminal: true, result: 'retry',
+    title: 'Task Set — Return When Due',
+    msg: 'C / D category: task is logged in Zoho. Return to the outreach step when the follow-up date arrives.',
+    restartAt: 'outreach', restartLabel: 'Back to Outreach'
+  },
+  dm2: {
+    title: '2nd Decision Maker',
+    sub: 'Reach a second DM at the same company. Was a requirement found?',
+    info: [
+      'Identify a 2nd DM: VP, Director, or Co-Founder.',
+      'Use Lusha or SignalHire for a fresh contact.',
+      'Log all attempts under the same company record in Zoho.',
+    ],
+    choices: [
+      { label: 'Requirement confirmed', sub: '', next: 'qualified_end' },
+      { label: 'No requirement — try a third contact', sub: '', next: 'dm3' },
+    ]
+  },
+  dm3: {
+    title: '3rd Decision Maker',
+    sub: 'Final attempt — most senior available DM. Requirement found?',
+    info: [
+      'Last attempt: most senior remaining DM at the company.',
+      'Switch channel if previous attempts failed.',
+      'Log everything in Zoho before making any Junk decision.',
+    ],
+    choices: [
+      { label: 'Requirement confirmed', sub: '', next: 'qualified_end' },
+      { label: 'No — all 3 DMs exhausted', sub: 'No requirement across all contacts', next: 'junk_end' },
+    ]
+  },
+  junk_end: {
+    terminal: true, result: 'junk',
+    title: 'Mark as Junk',
+    msg: 'All 3 decision makers contacted — no requirement found. Mark as Junk in Zoho with full notes and contact details.',
+    restartAt: null
+  },
 };
 
-// ── DONUT CHART ───────────────────────────────────────────────────────
-const DonutChart = ({ data, size = 220, thickness = 38 }) => {
-  const r = (size - thickness) / 2;
-  const cx = size / 2, cy = size / 2;
-  const circ = 2 * Math.PI * r;
-  let cumPct = 0;
-  const gap = 1.5; // degrees gap between segments
+let wizHistory = ['start'];
 
-  const segments = data.map((d) => {
-    const startPct = cumPct;
-    cumPct += d.pct;
-    const startDeg = (startPct / 100) * 360 - 90 + gap / 2;
-    const endDeg   = (cumPct   / 100) * 360 - 90 - gap / 2;
-    const startRad = (startDeg * Math.PI) / 180;
-    const endRad   = (endDeg   * Math.PI) / 180;
-    const x1 = cx + r * Math.cos(startRad), y1 = cy + r * Math.sin(startRad);
-    const x2 = cx + r * Math.cos(endRad),   y2 = cy + r * Math.sin(endRad);
-    const large = d.pct > 50 ? 1 : 0;
-    return { ...d, path: `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}` };
-  });
+function renderWizard() {
+  const nodeId = wizHistory[wizHistory.length - 1];
+  const node = WIZ[nodeId];
+  const depth = wizHistory.length;
 
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {segments.map((s, i) => (
-        <path key={i} d={s.path} fill="none" stroke={s.hex} strokeWidth={thickness} strokeLinecap="butt">
-          <title>{s.label}: {s.pct}%</title>
-        </path>
-      ))}
-      {/* Centre text */}
-      <text x={cx} y={cy - 10} textAnchor="middle" fontSize="28" fontWeight="900" fill="#0f172a" fontFamily="Inter,sans-serif">100</text>
-      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="10" fontWeight="700" fill="#94a3b8" fontFamily="Inter,sans-serif" letterSpacing="1">DEALS</text>
-    </svg>
-  );
-};
+  // Trail
+  const trail = document.getElementById('wiz-trail');
+  if (wizHistory.length > 1) {
+    trail.innerHTML = wizHistory.slice(0, -1).map((id, i) =>
+      (i > 0 ? '<span class="wiz-sep">›</span>' : '') +
+      `<span class="wiz-crumb">${WIZ[id].title}</span>`
+    ).join('');
+  } else {
+    trail.innerHTML = '';
+  }
 
-// ── GUIDELINES PAGE ───────────────────────────────────────────────────
-const GuidelinesPage = () => {
-  const dealBreakdown = [
-    { label: 'Large Deal',      range: '> ₹10L',    pct: 10, count: 10, hex: '#7c3aed', color: 'bg-violet-600', light: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200' },
-    { label: 'Medium Deal',     range: '₹5L – ₹10L',pct: 20, count: 20, hex: '#3b82f6', color: 'bg-blue-500',   light: 'bg-blue-100',   text: 'text-blue-700',   border: 'border-blue-200'   },
-    { label: 'Small Deal',      range: '₹1L – ₹5L', pct: 50, count: 50, hex: '#818cf8', color: 'bg-indigo-400', light: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-200' },
-    { label: 'Very Small Deal', range: '< ₹1L',     pct: 20, count: 20, hex: '#94a3b8', color: 'bg-slate-400',  light: 'bg-slate-100',  text: 'text-slate-600',  border: 'border-slate-200'  },
-  ];
+  const stage = document.getElementById('wiz-stage');
 
-  const coreKpis = [
-    { label: 'Monthly Deals Generated', value: '100',  sub: 'Total deals this month',          icon: 'trending-up',   bg: 'bg-blue-600',   textSub: 'text-blue-100' },
-    { label: 'RFQ → Deal Close Rate',   value: '15%',  sub: 'Of RFQs convert to closed deals', icon: 'target',        bg: 'bg-violet-600', textSub: 'text-violet-100' },
-    { label: 'Revenue vs Target',       value: '100%', sub: 'Team is at full target',           icon: 'bar-chart-2',   bg: 'bg-emerald-600',textSub: 'text-emerald-100' },
-    { label: 'CRM Hygiene Score',       value: '>95%', sub: 'Data quality benchmark',           icon: 'shield-check',  bg: 'bg-amber-500',  textSub: 'text-amber-100' },
-  ];
-
-  const operationalKpis = [
-    { label: 'Categorization Fill Rate', value: '99%',     sub: 'Client Category Field Filled', icon: 'pie-chart',      bg: 'bg-blue-600',   textSub:'text-blue-100' },
-    { label: 'A & B Follow-up Speed',    value: '15 Days', sub: 'Max re-engagement window',     icon: 'clock',          bg: 'bg-indigo-600', textSub:'text-indigo-100' },
-    { label: 'Sprint Leads / Week',      value: '25',      sub: 'Weekly output target',         icon: 'zap',            bg: 'bg-white',      textSub:'text-slate-400', light: true },
-    { label: 'Contacts per A/B Account', value: '3',       sub: 'Minimum before outreach',      icon: 'users',          bg: 'bg-white',      textSub:'text-slate-400', light: true },
-  ];
-
-  const rules = [
-    { title:'CRM First',              desc:'Every company must be added to Zoho CRM immediately.' },
-    { title:'Categorization',         desc:'Categorize leads as A, B, C, or D based on revenue/potential.' },
-    { title:'Target Decision Makers', desc:'Focus on Founders, CEOs, Directors, or Supply Chain Heads.' },
-    { title:'Persistent Research',    desc:'A wrong contact is not closure; find the correct person.' },
-    { title:'Service Education',      desc:"Explain all Edgistify services before marking 'No Requirement'." },
-    { title:'Mandatory Follow-ups',   desc:'Create tasks for specific dates or a 60-day default.' },
-    { title:'Next Actions',           desc:'No lead should remain idle without a task/call/retry.' },
-    { title:'Sprint Priority',        desc:'High priority: Target 25 Sprint leads per week.' },
-  ];
-
-  return (
-    <div className="space-y-8 animate-in">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Guidelines & Performance KPIs</h1>
-        <p className="text-slate-500 text-sm">Core standards and measurable targets for operational success.</p>
-      </div>
-
-      {/* ── Core KPI Cards ── */}
-      <div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Core Performance Metrics</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {coreKpis.map((k,i)=>(
-            <div key={i} className={`${k.bg} p-6 rounded-2xl shadow-md`}>
-              <div className="flex justify-between items-start mb-3">
-                <p className={`${k.textSub} text-[10px] font-bold uppercase tracking-wider leading-tight max-w-[120px]`}>{k.label}</p>
-                <Icon name={k.icon} size={16} className={`${k.textSub} flex-shrink-0`}/>
-              </div>
-              <h3 className={`text-3xl font-black ${k.bg==='bg-white'?'text-slate-800':'text-white'}`}>{k.value}</h3>
-              <p className={`text-[10px] ${k.textSub} mt-1 uppercase tracking-wider`}>{k.sub}</p>
-            </div>
-          ))}
+  if (node.terminal) {
+    const colors = { qualified: '#2596be', retry: '#d97706', junk: '#94a3b8' };
+    const titleColors = { qualified: '#0d7a9a', retry: '#d97706', junk: '#64748b' };
+    const c = colors[node.result];
+    stage.innerHTML = `
+      <div class="wiz-card">
+        <div class="wiz-terminal">
+          <div class="wiz-term-icon" style="background:var(--blue-light)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              ${node.result === 'qualified' ? '<polyline points="20 6 9 17 4 12"></polyline>' :
+                node.result === 'junk' ? '<polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path>' :
+                '<polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.51"></path>'}
+            </svg>
+          </div>
+          <div class="wiz-term-title" style="color:${titleColors[node.result]}">${node.title}</div>
+          <div class="wiz-term-msg">${node.msg}</div>
+          <div class="wiz-term-btns">
+            ${node.restartAt ? `<button class="wiz-term-btn" style="background:var(--surface2);color:var(--text2)" onclick="wizJump('${node.restartAt}')">${node.restartLabel}</button>` : ''}
+            <button class="wiz-term-btn" style="background:var(--blue);color:white" onclick="wizReset()">Start Over</button>
+          </div>
         </div>
-      </div>
+        <div class="wiz-foot" style="justify-content:flex-start">
+          <button class="wiz-back" onclick="wizBack()">&#8592; Back</button>
+        </div>
+      </div>`;
+    return;
+  }
 
-      {/* ── Deal Breakdown ── */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6">
-        <div className="flex items-center justify-between mb-6">
+  const infoHTML = node.info && node.info.length
+    ? `<div class="wiz-info">${node.info.map(t =>
+        `<div class="wiz-info-row"><div class="wiz-info-dot"></div><div class="wiz-info-txt">${t}</div></div>`
+      ).join('')}</div>`
+    : '';
+
+  const choicesHTML = node.choices.map((ch, i) => `
+    <div class="wiz-choice" onclick="wizGo('${ch.next}')">
+      <div style="flex:1">
+        <div class="wiz-choice-label">${ch.label}</div>
+        ${ch.sub ? `<div class="wiz-choice-sub">${ch.sub}</div>` : ''}
+      </div>
+      <span class="wiz-choice-arr">›</span>
+    </div>`).join('');
+
+  stage.innerHTML = `
+    <div class="wiz-card">
+      <div class="wiz-head">
+        <div class="wiz-lbl">Step ${depth} of your process</div>
+        <div class="wiz-q">${node.title}</div>
+        ${node.sub ? `<div class="wiz-sub">${node.sub}</div>` : ''}
+      </div>
+      ${infoHTML}
+      <div class="wiz-choices">${choicesHTML}</div>
+      <div class="wiz-foot">
+        ${wizHistory.length > 1 ? '<button class="wiz-back" onclick="wizBack()">&#8592; Back</button>' : '<span></span>'}
+        <span class="wiz-depth">${depth} step${depth !== 1 ? 's' : ''} in</span>
+      </div>
+    </div>`;
+}
+
+function wizGo(id) { wizHistory.push(id); renderWizard(); }
+function wizBack() { if (wizHistory.length > 1) { wizHistory.pop(); renderWizard(); } }
+function wizReset() { wizHistory = ['start']; renderWizard(); }
+function wizJump(id) { wizHistory = ['start', id]; renderWizard(); }
+
+/* ═══════════════════════════════════════════════════════
+   STEPPER DATA
+═══════════════════════════════════════════════════════ */
+const STEPS = [
+  {
+    num:'01', title:'Identify Lead Source', color:'#2563eb', bg:'#dbeafe',
+    tag:'Entry Point', tagBg:'#dbeafe', tagColor:'#1d4ed8',
+    points:[
+      'Check: management-assigned (Sprint) or self-sourced?',
+      'Sprint leads: log source = "Sprint" in Zoho, then skip to Step 4.',
+      'Self-sourced leads: begin the full research process at Step 2.',
+    ],
+    branch:{ header:'Route', rows:[['Sprint Lead','Skip to Step 4 — Trigger Events'],['Self-Sourced','Continue to Step 2 — Research']] },
+    tools:['Zoho CRM']
+  },
+  {
+    num:'02', title:'Sales Research Sprint', color:'#4f46e5', bg:'#c7d2fe',
+    tag:'Track 2 Only', tagBg:'#eef2ff', tagColor:'#4338ca',
+    points:[
+      'Company size, revenue, vertical and geographic presence.',
+      'Identify: Founder / CEO / VP Supply Chain / Head of Logistics.',
+      'Recent signals: funding rounds, expansions, leadership hires, job postings.',
+    ],
+    branch:null,
+    tools:['Tracxn','Lusha','SignalHire','LinkedIn']
+  },
+  {
+    num:'03', title:'Categorise — A, B, C or D', color:'#7c3aed', bg:'#ddd6fe',
+    tag:'Gemini Required', tagBg:'#f5f3ff', tagColor:'#6d28d9',
+    points:[
+      'A = Rs.100Cr+ turnover · B = Rs.50–100Cr · C = Rs.10–50Cr · D = Under Rs.10Cr',
+      'Use the Client Category Gemini Tool to confirm the category.',
+      'Log category in Zoho immediately — mandatory before outreach.',
+    ],
+    branch:null,
+    tools:['Client Category Tool','Zoho CRM']
+  },
+  {
+    num:'04', title:'Trigger Events & Sales Hook', color:'#d97706', bg:'#fde68a',
+    tag:'Sprint Joins Here', tagBg:'#fffbeb', tagColor:'#b45309',
+    points:[
+      'Signals: recent funding / new SKU launch / geographic expansion / ops leadership hire.',
+      'Use the Sales Hook Gemini Tool to build a personalised opening line.',
+      'Sprint leads enter the process at this step with context already confirmed.',
+    ],
+    branch:null,
+    tools:['Sales Hook Tool','LinkedIn']
+  },
+  {
+    num:'05', title:'Add to Zoho Sprint Plan', color:'#0f766e', bg:'#99f6e4',
+    tag:'CRM Mandatory', tagBg:'#f0fdfa', tagColor:'#0f766e',
+    points:[
+      'Log source, category, trigger event and all research notes.',
+      'A & B accounts: identify at least 3 contacts before outreach begins.',
+      'Enrich contacts: Lusha for email / mobile, SignalHire for DM profiles.',
+      'Set the initial outreach task — no lead enters the sprint without one.',
+    ],
+    branch:null,
+    tools:['Zoho CRM','Lusha','SignalHire']
+  },
+  {
+    num:'06', title:'Outreach — Call / Email / LinkedIn', color:'#0284c7', bg:'#bae6fd',
+    tag:'', tagBg:'', tagColor:'',
+    points:[
+      'Target DMs only: Founder, CEO, VP SCM, Head of Logistics.',
+      'Lead every outreach with the trigger event — make the reason specific.',
+      'Rotate channels if no response: call → email → LinkedIn.',
+    ],
+    branch:{ header:'Branch', rows:[
+      ['Not connected','Retry via next channel · Loop back to Step 6'],
+      ['Wrong contact','Find correct DM via Lusha / SignalHire · Retry Step 6'],
+      ['Right DM reached','Continue to Step 7'],
+    ]},
+    tools:['Lusha','SignalHire','LinkedIn']
+  },
+  {
+    num:'07', title:'Requirement Check & Qualification', color:'#0d9488', bg:'#ccfbf1',
+    tag:'Full Walkthrough', tagBg:'#f0fdfa', tagColor:'#0d9488',
+    points:[
+      'Pitch ALL services: warehousing · fulfilment · last-mile · reverse logistics · tech platform.',
+      'Never mark No Requirement without completing the full walkthrough.',
+      'Requirement confirmed: mark Qualified, schedule demo in Zoho.',
+    ],
+    branch:{ header:'Outcome', rows:[
+      ['Requirement confirmed','QUALIFIED — Schedule demo · END'],
+      ['No requirement','Continue to Step 8 — Follow-Up'],
+    ]},
+    tools:['Zoho CRM','Sales Portal']
+  },
+  {
+    num:'08', title:'Follow-Up & Re-engagement', color:'#b45309', bg:'#fde68a',
+    tag:'All Categories', tagBg:'#fffbeb', tagColor:'#b45309',
+    points:[
+      'Date given by client: create Zoho task for that exact day.',
+      'No date: create a mandatory 60-day follow-up task.',
+      'A & B: connect with 2nd DM then 3rd DM before any Junk decision.',
+      'C & D: task is set — return to Step 6 when the follow-up date fires.',
+    ],
+    branch:{ header:'A & B Extended Logic', rows:[
+      ['2nd DM — requirement confirmed','QUALIFIED · END'],
+      ['2nd DM — no requirement','Try 3rd DM'],
+      ['3rd DM — requirement confirmed','QUALIFIED · END'],
+      ['3rd DM — no requirement','JUNK — all 3 exhausted'],
+      ['C / D category','Loop back to Step 6 when task fires'],
+    ]},
+    tools:['Zoho CRM','Lusha','SignalHire']
+  },
+];
+
+let openStep = 0;
+
+function renderStepper() {
+  const list = document.getElementById('stepper-list');
+  list.innerHTML = STEPS.map((s, i) => `
+    <div class="step-row ${i === openStep ? 'open' : ''} ${i < openStep ? 'done' : ''}" id="sr-${i}" onclick="toggleStep(${i})">
+      <div class="step-left">
+        <div class="step-circle">${i < openStep ? '&#10003;' : s.num}</div>
+        ${i < STEPS.length - 1 ? '<div class="step-line"></div>' : ''}
+      </div>
+      <div class="step-right">
+        <div class="step-hdr">
           <div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Monthly Deal Mix</p>
-            <h2 className="text-xl font-black text-slate-900">100 Deals Generated</h2>
+            <div class="step-num">STEP ${s.num}</div>
+            <div class="step-name">${s.title}</div>
           </div>
-          <div className="text-right">
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider">Close Rate</p>
-            <p className="text-2xl font-black text-violet-600">15%</p>
-            <p className="text-[10px] text-slate-400">RFQ → Deal</p>
-          </div>
+          ${s.tag ? `<span class="step-tag" style="background:${s.tagBg};color:${s.tagColor}">${s.tag}</span>` : ''}
         </div>
-
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          {/* Donut */}
-          <div className="flex-shrink-0">
-            <DonutChart data={dealBreakdown} size={200} thickness={40}/>
+        <div class="step-body">
+          <div class="step-pts">
+            ${s.points.map(p => `
+              <div class="step-pt">
+                <div class="step-pt-dot" style="background:${s.color}"></div>
+                <div class="step-pt-txt">${p}</div>
+              </div>`).join('')}
           </div>
-
-          {/* Legend cards */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-            {dealBreakdown.map((d,i)=>(
-              <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${d.light} ${d.border}`}>
-                <div className="w-3 h-3 rounded-full flex-shrink-0" style={{backgroundColor: d.hex}}></div>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-black ${d.text} leading-none`}>{d.label}</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">{d.range}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-base font-black text-slate-800 leading-none">{d.count}</p>
-                  <p className={`text-[10px] font-bold ${d.text}`}>{d.pct}%</p>
-                </div>
-              </div>
-            ))}
+          ${s.branch ? `
+            <div class="step-branch" style="border-color:${s.color}30">
+              <div class="sb-hdr" style="background:${s.bg};color:${s.color}">${s.branch.header}</div>
+              ${s.branch.rows.map(([cond, out]) => `
+                <div class="sb-row">
+                  <div class="sb-cond" style="color:${s.color}">${cond}</div>
+                  <div class="sb-out">${out}</div>
+                </div>`).join('')}
+            </div>` : ''}
+          <div class="step-tools-row">
+            ${s.tools.map(t => `<span class="tool-chip">${t}</span>`).join('')}
           </div>
-        </div>
-      </div>
-
-      {/* ── Operational KPIs ── */}
-      <div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Operational Standards</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {operationalKpis.map((k,i)=>(
-            <div key={i} className={`${k.bg} p-6 rounded-2xl ${k.light?'border-2 border-slate-100':'shadow-md'}`}>
-              <div className="flex justify-between items-start mb-3">
-                <p className={`${k.textSub} text-[10px] font-bold uppercase tracking-wider leading-tight max-w-[120px]`}>{k.label}</p>
-                <Icon name={k.icon} size={16} className={`${k.textSub} flex-shrink-0`}/>
-              </div>
-              <h3 className={`text-3xl font-black ${k.light?'text-slate-800':'text-white'}`}>{k.value}</h3>
-              <p className={`text-[10px] ${k.textSub} mt-1 uppercase tracking-wider`}>{k.sub}</p>
-            </div>
-          ))}
+          ${i < STEPS.length - 1 ? `
+            <button class="step-next-btn" onclick="event.stopPropagation();jumpStep(${i + 1})">
+              Next: ${STEPS[i + 1].title} &#8594;
+            </button>` : `
+            <div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border:2px solid #bbf7d0;border-radius:10px;font-size:12px;font-weight:700;color:#15803d">
+              End of process — lead is Qualified or marked as Junk in Zoho.
+            </div>`}
         </div>
       </div>
+    </div>`).join('');
+}
 
-      {/* ── Rules + Quality ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <div className="flex items-center gap-2 mb-4"><Icon name="clipboard-check" className="text-blue-600"/><h2 className="text-xl font-bold">Golden Rules</h2></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {rules.map((r,i)=>(
-              <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 flex gap-3 items-center hover:border-blue-200 transition-colors">
-                <div className="bg-slate-100 text-slate-500 font-bold w-6 h-6 flex items-center justify-center rounded-full text-[10px] shrink-0">{i+1}</div>
-                <div>
-                  <h4 className="font-bold text-sm text-slate-800 leading-none mb-1">{r.title}</h4>
-                  <p className="text-[11px] text-slate-500 leading-tight">{r.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <div className="flex items-center gap-2 mb-4"><Icon name="shield-check" className="text-emerald-600"/><h2 className="text-xl font-bold">Quality Standards</h2></div>
-          <div className="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl space-y-4">
-            {[
-              ['CRM Integrity','99% categorization is strictly monitored via audit reports.'],
-              ['Velocity','A & B leads must be re-engaged every 15 days to maintain sales momentum.'],
-              ['Exhaustive Outreach','Every service must be pitch-verified before disqualification.'],
-            ].map(([t,d],i)=>(
-              <div key={i} className="flex gap-3">
-                <Icon name="check" size={18} className="text-emerald-600 mt-1 shrink-0"/>
-                <p className="text-sm text-emerald-900 leading-relaxed"><strong>{t}:</strong> {d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+function toggleStep(i) {
+  openStep = (openStep === i) ? -1 : i;
+  renderStepper();
+  if (openStep >= 0) {
+    const el = document.getElementById('sr-' + openStep);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function jumpStep(i) {
+  openStep = i;
+  renderStepper();
+  const el = document.getElementById('sr-' + i);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ═══════════════════════════════════════════════════════
+   GUIDELINES
+═══════════════════════════════════════════════════════ */
+const KPIS = [
+  { num: '100', label: 'Monthly Deals Generated', sub: 'Pipeline output target', color: '#0d9488' },
+  { num: '15%', label: 'RFQ to Deal Close Rate', sub: 'Minimum conversion expected', color: '#2563eb' },
+  { num: '100%', label: 'Revenue vs Target', sub: 'Non-negotiable monthly floor', color: '#7c3aed' },
+  { num: '>95%', label: 'CRM Hygiene Score', sub: 'Data quality in Zoho', color: '#d97706' },
+  { num: '99%', label: 'Categorization Fill Rate', sub: 'Every lead must be categorised', color: '#0284c7' },
+  { num: '25/wk', label: 'Sprint Lead Volume', sub: 'Minimum sprint assignments', color: '#b45309' },
+];
+
+const DONUT_DATA = [
+  { label: 'Large (>Rs.10L)', pct: 10, color: '#0d9488' },
+  { label: 'Medium (Rs.5–10L)', pct: 20, color: '#2563eb' },
+  { label: 'Small (Rs.1–5L)', pct: 50, color: '#f59e0b' },
+  { label: 'Very Small (<Rs.1L)', pct: 20, color: '#94a3b8' },
+];
+
+const GOLDEN_RULES = [
+  { n:'01', t:'<strong>Never mark No Requirement</strong> without completing the full service walkthrough across all five lines.' },
+  { n:'02', t:'<strong>Every lead must have a next action.</strong> No lead exits a conversation without a Zoho task.' },
+  { n:'03', t:'<strong>A & B accounts require 3 DM attempts</strong> minimum before any Junk decision is made.' },
+  { n:'04', t:'<strong>C & D leads are never marked Junk directly.</strong> They always receive a follow-up task first.' },
+  { n:'05', t:'<strong>Log before you call.</strong> No outreach begins until the lead is fully set up in the Zoho Sprint Plan.' },
+  { n:'06', t:'<strong>Target decision makers only.</strong> Founder, CEO, VP SCM, Head of Logistics — never waste an outreach on a gatekeeper.' },
+  { n:'07', t:'<strong>Open with the trigger event.</strong> Every call and email must have a specific, personalised hook — no generic pitches.' },
+];
+
+function renderGuidelines() {
+  // KPIs
+  document.getElementById('kpi-grid').innerHTML = KPIS.map(k => `
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:${k.color}">${k.num}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
+
+  // Donut
+  const r = 38, cx = 55, cy = 55, stroke = 20;
+  const circ = 2 * Math.PI * r;
+  let offset = 0;
+  let segs = '';
+  DONUT_DATA.forEach(d => {
+    const dash = (d.pct / 100) * circ;
+    segs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="${stroke}"
+      stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset += dash;
+  });
+  document.getElementById('donut-svg').innerHTML = segs;
+  document.getElementById('donut-legend').innerHTML = DONUT_DATA.map(d => `
+    <div class="legend-row">
+      <div class="legend-dot" style="background:${d.color}"></div>
+      <div class="legend-label">${d.label}</div>
+      <div class="legend-val">${d.pct}%</div>
+    </div>`).join('');
+
+  // Golden rules
+  document.getElementById('golden-rules').innerHTML = GOLDEN_RULES.map(r => `
+    <div class="rule-row">
+      <span class="rule-num">${r.n}</span>
+      <span class="rule-txt">${r.t}</span>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOOLKIT
+═══════════════════════════════════════════════════════ */
+const TOOLS = [
+  {
+    name: 'Edgistify Sales Portal', type: 'Internal Platform',
+    typeBg: '#dbeafe', typeColor: '#1e40af',
+    desc: 'Pipeline management, lead tracking, and internal sales operations hub.',
+    url: 'https://sales.edgistify.com/', dl: false
+  },
+  {
+    name: 'Client Category Tool', type: 'Gemini AI',
+    typeBg: '#ede9fe', typeColor: '#4c1d95',
+    desc: 'Categorise leads as A, B, C or D based on revenue and logistics relevance.',
+    url: 'https://gemini.google.com/gem/1Y8ZoClIZ1nEJP6kv6vIPs8gmH6l0rA7n?usp=sharing', dl: false
+  },
+  {
+    name: 'Sales Hook Tool', type: 'Gemini AI',
+    typeBg: '#ede9fe', typeColor: '#4c1d95',
+    desc: 'Build trigger-event hooks and personalised outreach angles for each lead.',
+    url: 'https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YlFhiA2FYTtS1XbA?usp=sharing', dl: false
+  },
+  {
+    name: 'Lusha', type: 'Enrichment',
+    typeBg: '#fef3c7', typeColor: '#78350f',
+    desc: 'Mobile numbers and verified email addresses for decision makers.',
+    url: 'https://www.lusha.com', dl: false
+  },
+  {
+    name: 'SignalHire', type: 'Enrichment',
+    typeBg: '#fef3c7', typeColor: '#78350f',
+    desc: 'In-depth decision maker profiles and contact discovery across industries.',
+    url: 'https://www.signalhire.com', dl: false
+  },
+  {
+    name: 'Tracxn', type: 'Research',
+    typeBg: '#f1f5f9', typeColor: '#334155',
+    desc: 'Startup data, funding history, revenue estimates, and company intelligence.',
+    url: 'https://tracxn.com', dl: false
+  },
+  {
+    name: 'Full Workflow PDF', type: 'Official Guide',
+    typeBg: '#d1fae5', typeColor: '#065f46',
+    desc: 'Complete process reference document for the lead qualification framework.',
+    url: 'https://drive.google.com/uc?export=download&id=14nzhPHaAj9EGxET2OgJQjkbaLE48jrD4', dl: true
+  },
+];
+
+function renderToolkit() {
+  document.getElementById('tools-grid').innerHTML = TOOLS.map(t => `
+    <div class="tool-card">
+      <div class="tool-card-top">
+        <div class="tool-type-badge" style="background:${t.typeBg};color:${t.typeColor}">${t.type}</div>
+        <div class="tool-name">${t.name}</div>
       </div>
-    </div>
-  );
-};
+      <div class="tool-card-body">
+        <div class="tool-desc">${t.desc}</div>
+        <a class="tool-btn" href="${t.url}" ${t.dl ? 'download' : 'target="_blank" rel="noopener"'}>
+          ${t.dl ? 'Download PDF' : 'Open Tool'}
+        </a>
+      </div>
+    </div>`).join('');
+}
 
-// ── MAIN APP ─────────────────────────────────────────────────────────
-const App = () => {
-  const [tab, setTab] = useState('outreach');
-  const pdfDownload = "https://drive.google.com/uc?export=download&id=14nzhPHaAj9EGxET2OgJQjkbaLE48jrD4";
-
-  const tools = [
-    { name:'Full Workflow PDF',       type:'Official Guide',    url:pdfDownload,                                                               use:'Complete Process Flowchart & Visuals',                    download:true },
-    { name:'Edgistify Sales Portal',  type:'Internal Platform', url:'https://sales.edgistify.com/',                                            use:'Sales pipeline, lead tracking & internal sales operations' },
-    { name:'Client Category Tool',    type:'Gemini',            url:'https://gemini.google.com/gem/1Y8ZoCIIZ1nEJP6kv6vIPs8gmH6l0rA7n',        use:'Category, Logistics Relevance' },
-    { name:'Sales Hook Tool',         type:'Gemini',            url:'https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YIFhiA2FYTtS1XbA',        use:'Trigger Events, Outreach Hooks' },
-    { name:'Lusha',                   type:'Enrichment',        url:'https://www.lusha.com',                                                   use:'Mobile numbers, Email IDs' },
-    { name:'SignalHire',              type:'Enrichment',        url:'https://www.signalhire.com',                                              use:'Decision maker info' },
-    { name:'Tracxn',                  type:'Research',          url:'https://tracxn.com',                                                      use:'Startup data, Revenue estimates' },
-  ];
-
-  const tabs = [
-    { key:'outreach',   label:'Outreach Guide',    icon:'book-open'  },
-    { key:'guidelines', label:'Guidelines & KPIs', icon:'bar-chart-2'},
-    { key:'tools',      label:'Toolkit',           icon:'wrench'     },
-  ];
-
-  return (
-    <div className="min-h-screen">
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <div className="bg-blue-600 p-2 rounded-lg text-white"><Icon name="target"/></div>
-              <span className="font-bold text-xl tracking-tight text-slate-800">Edgistify Operations</span>
-            </div>
-            <div className="hidden md:flex space-x-1">
-              {tabs.map(t=>(
-                <button key={t.key} onClick={()=>setTab(t.key)} className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-colors ${tab===t.key?'bg-blue-50 text-blue-700':'text-slate-600 hover:text-blue-600'}`}>
-                  <Icon name={t.icon} size={14}/> {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {tab==='outreach'   && <OutreachGuidePage/>}
-        {tab==='guidelines' && <GuidelinesPage/>}
-
-        {tab==='tools' && (
-          <div className="space-y-6 animate-in">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">Operational Toolkit</h1>
-              <p className="text-slate-500 text-sm">Approved software and AI tools for lead enrichment.</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tools.map((tool,i)=>(
-                <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group flex flex-col">
-                  <div className="p-4 border-b bg-slate-50 group-hover:bg-blue-50 transition-colors">
-                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{tool.type}</span>
-                    <h3 className="font-bold text-slate-800">{tool.name}</h3>
-                  </div>
-                  <div className="p-4 flex flex-col flex-1">
-                    <p className="text-xs text-slate-500 mb-6 flex-1 leading-relaxed">{tool.use}</p>
-                    <a href={tool.url} {...(tool.download?{download:true}:{target:'_blank'})}
-                       className="flex items-center justify-center gap-2 py-2.5 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-800 text-xs font-bold rounded-lg transition-all">
-                      {tool.download && <Icon name="download" size={13}/>}
-                      {tool.download ? 'Download PDF' : 'Open Resource'}
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
-
-      <footer className="py-12 text-center text-slate-400 text-xs">
-        <div className="flex justify-center gap-4 mb-2">
-          <span className="flex items-center gap-1"><Icon name="check-circle" size={12}/> Process Verified</span>
-          <span className="flex items-center gap-1"><Icon name="lock" size={12}/> Internal Use Only</span>
-        </div>
-        <p>© Edgistify Internal Operations • Lead Qualification Framework v2.1</p>
-      </footer>
-    </div>
-  );
-};
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+renderWizard();
+renderStepper();
+renderGuidelines();
+renderToolkit();
 </script>
 </body>
 </html>
