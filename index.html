@@ -8,156 +8,389 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f4f8fb;--surface:#fff;--surface2:#eef5fa;--border:#c9dff0;
-  --blue:#2596be;--blue2:#1a7a9e;--blue-light:#e8f5fb;--blue-pale:#f0f8fd;
-  --text:#0f172a;--text2:#3d5a72;--text3:#8aafc4;
-  --r:14px;
+  /* Brand — Edgistify Teal */
+  --teal:#00b09b;
+  --teal-dark:#008f7e;
+  --teal-deep:#006b5e;
+  --teal-mid:#26c4af;
+  --teal-light:#e0f7f4;
+  --teal-pale:#f0faf9;
+
+  /* Backgrounds */
+  --bg:#f4faf9;
+  --surface:#ffffff;
+  --surface2:#eef8f6;
+
+  /* Borders */
+  --border:#d4e8f2;
+  --border2:#bfdaea;
+
+  /* Text — WCAG AA compliant on white */
+  --text:#1a2e3b;        /* very dark blue-grey, 10:1 on white */
+  --text2:#3d5a6c;       /* dark blue-grey, 6.5:1 on white */
+  --text3:#6b8fa3;       /* medium, 3.3:1 — decorative only */
+
+  --green:#059669;
+  --amber:#b45309;
+  --red:#b91c1c;
 }
+
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* NAV */
-.nav{background:var(--blue);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px}
-.nav-logo{display:flex;align-items:center;gap:10px;color:#fff;font-size:16px;font-weight:800;letter-spacing:-.02em}
-.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.9)}
-.nav-tabs{display:flex;gap:4px}
-.nav-tab{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px}
-.nav-tab:hover{color:#fff}
-.nav-tab.active{background:rgba(255,255,255,.18);color:#fff;font-weight:700}
+/* ═══════════════════════════════════════════════════════
+   SPLASH SCREEN
+═══════════════════════════════════════════════════════ */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+}
 
-/* MAIN */
-.main{max-width:1200px;margin:0 auto;padding:28px 24px}
+/* animated grid lines */
+.splash-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--teal-light) 1px, transparent 1px),
+    linear-gradient(90deg, var(--teal-light) 1px, transparent 1px);
+  background-size:48px 48px;
+  opacity:0;
+  animation:gridFade 1s ease-out .1s forwards;
+}
+@keyframes gridFade{to{opacity:1}}
 
-/* PAGE */
+/* radial glow */
+.splash-glow{
+  position:absolute;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,176,155,.12) 0%, transparent 70%);
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.1);opacity:1}}
+
+/* circle rings */
+.splash-rings{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.ring{
+  position:absolute;border-radius:50%;border:1.5px solid rgba(0,176,155,.15);
+  animation:ringExpand 2s ease-out infinite;
+}
+.ring:nth-child(1){width:160px;height:160px;animation-delay:0s}
+.ring:nth-child(2){width:280px;height:280px;animation-delay:.4s}
+.ring:nth-child(3){width:400px;height:400px;animation-delay:.8s}
+.ring:nth-child(4){width:520px;height:520px;animation-delay:1.2s}
+@keyframes ringExpand{
+  0%{opacity:0;transform:scale(.8)}
+  30%{opacity:1}
+  100%{opacity:0;transform:scale(1.05)}
+}
+
+.splash-center{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  text-align:center;
+}
+
+/* logo mark */
+.splash-logo-mark{
+  width:72px;height:72px;border-radius:22px;
+  background:#00b09b;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:24px;
+  box-shadow:0 12px 40px rgba(0,176,155,.35);
+  opacity:0;
+  animation:markPop .5s cubic-bezier(.175,.885,.32,1.275) .4s forwards;
+}
+@keyframes markPop{from{opacity:0;transform:scale(.5) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(0deg)}}
+
+.splash-logo-svg{width:36px;height:36px}
+
+/* wordmark */
+.splash-wordmark{
+  opacity:0;
+  animation:wordSlide .5s ease-out .75s forwards;
+}
+@keyframes wordSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.splash-wordmark h1{
+  font-size:36px;font-weight:900;letter-spacing:-.04em;
+  color:var(--text);line-height:1;margin-bottom:6px;
+}
+.splash-wordmark h1 span{color:var(--teal)}
+.splash-wordmark p{
+  font-size:14px;font-weight:500;color:var(--text3);letter-spacing:.02em;
+}
+
+/* welcome message */
+.splash-welcome{
+  margin-top:32px;
+  opacity:0;
+  animation:wordSlide .5s ease-out 1.1s forwards;
+}
+.splash-welcome p{
+  font-size:15px;color:var(--text2);line-height:1.65;max-width:400px;
+}
+.splash-welcome strong{color:var(--teal);font-weight:700}
+
+/* progress bar */
+.splash-progress-wrap{
+  margin-top:40px;width:220px;
+  opacity:0;
+  animation:wordSlide .4s ease-out 1.4s forwards;
+}
+.splash-progress-track{
+  height:3px;background:var(--teal-light);border-radius:99px;overflow:hidden;
+}
+.splash-progress-bar{
+  height:100%;background:#00b09b;border-radius:99px;width:0%;
+  transition:width .05s linear;
+}
+.splash-progress-label{
+  font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;
+  text-align:center;margin-top:10px;font-family:'JetBrains Mono',monospace;
+}
+
+/* exit animation */
+#splash.exiting{animation:splashExit .6s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes splashExit{
+  0%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.04);pointer-events:none}
+}
+
+/* ═══════════════════════════════════════════════════════
+   APP SHELL — hidden until splash done
+═══════════════════════════════════════════════════════ */
+#app{opacity:0;transition:opacity .5s ease}
+#app.visible{opacity:1}
+
+/* ═══════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════ */
+.nav{background:var(--teal);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,176,155,.3)}
+.nav-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px}
+.nav-logo{display:flex;align-items:center;gap:10px;color:#fff;font-size:16px;font-weight:800;letter-spacing:-.02em;text-decoration:none}
+.nav-logo-box{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.nav-logo-box svg{width:16px;height:16px}
+.nav-sub{font-weight:400;font-size:12px;color:rgba(255,255,255,.6);margin-left:2px}
+.nav-tabs{display:flex;gap:3px}
+.nav-tab{padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;transition:all .18s}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,.12)}
+.nav-tab.active{background:rgba(255,255,255,.2);color:#fff;font-weight:700}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════════════════ */
+.main{max-width:1240px;margin:0 auto;padding:28px 28px}
 .page{display:none}.page.active{display:block}
 
-/* SUB-TABS */
-.subtab-bar{display:flex;gap:4px;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:4px;width:fit-content;margin-bottom:24px}
-.subtab{padding:7px 18px;border-radius:8px;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;transition:all .2s}
-.subtab:hover{background:var(--surface2);color:var(--text)}
-.subtab.active{background:var(--blue);color:#fff}
-
 /* PAGE HEADER */
-.page-header{margin-bottom:24px}
-.page-header h1{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:4px}
+.page-header{margin-bottom:22px}
+.page-header h1{font-size:22px;font-weight:900;letter-spacing:-.025em;color:var(--text);margin-bottom:4px}
 .page-header p{font-size:13px;color:var(--text2)}
 
-/* ════ WIZARD ════ */
-.wiz-wrap{max-width:640px}
-.wiz-trail{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:16px;min-height:24px}
-.wiz-crumb{font-size:10px;font-weight:700;color:var(--text3);background:var(--surface);border:1.5px solid var(--border);padding:2px 10px;border-radius:99px}
-.wiz-sep{color:var(--border);font-size:12px;margin:0 1px}
+/* SUB-TABS */
+.subtab-bar{display:flex;gap:3px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:4px;width:fit-content;margin-bottom:22px}
+.subtab{padding:7px 18px;border-radius:8px;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;transition:all .18s}
+.subtab:hover{background:var(--surface2);color:var(--text)}
+.subtab.active{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(0,176,155,.25)}
 
-.wiz-card{background:var(--surface);border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(37,150,190,.12);border:2px solid var(--border)}
-.wiz-head{padding:22px 24px 16px;border-bottom:1px solid var(--border)}
-.wiz-lbl{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
-.wiz-q{font-size:20px;font-weight:900;color:var(--text);letter-spacing:-.02em;line-height:1.2;margin-bottom:5px}
+/* ═══════════════════════════════════════════════════════
+   OUTREACH LAYOUT — wizard/stepper + sidebar
+═══════════════════════════════════════════════════════ */
+.outreach-layout{display:grid;grid-template-columns:1fr 240px;gap:24px;align-items:flex-start}
+.outreach-main{min-width:0}
+
+/* SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:10px;position:sticky;top:78px}
+.sidebar-title{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;padding:0 2px}
+.sidebar-tool{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;text-decoration:none;transition:all .18s;cursor:pointer}
+.sidebar-tool:hover{border-color:var(--teal);box-shadow:0 3px 12px rgba(0,176,155,.12);transform:translateY(-1px)}
+.sidebar-tool-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-tool-icon svg{width:15px;height:15px}
+.sidebar-tool-info{flex:1;min-width:0}
+.sidebar-tool-name{font-size:12px;font-weight:700;color:var(--text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-tool-type{font-size:9px;font-weight:700;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.05em}
+.sidebar-tool-arr{color:var(--text3);font-size:12px;flex-shrink:0;transition:transform .18s}
+.sidebar-tool:hover .sidebar-tool-arr{transform:translateX(2px);color:var(--teal)}
+.sidebar-divider{height:1px;background:var(--border);margin:2px 0}
+.sidebar-note{background:var(--teal-pale);border:1.5px solid var(--border);border-radius:12px;padding:12px}
+.sidebar-note p{font-size:11px;color:var(--text2);line-height:1.6}
+.sidebar-note strong{color:var(--teal-dark);font-weight:700}
+
+/* ═══════════════════════════════════════════════════════
+   WIZARD
+═══════════════════════════════════════════════════════ */
+.wiz-trail{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:14px;min-height:22px}
+.wiz-crumb{font-size:10px;font-weight:700;color:var(--text3);background:var(--surface);border:1.5px solid var(--border);padding:2px 10px;border-radius:99px}
+.wiz-sep{color:var(--border2);font-size:11px;margin:0 1px}
+
+.wiz-card{background:var(--surface);border-radius:16px;overflow:hidden;border:1.5px solid var(--border);box-shadow:0 2px 16px rgba(0,176,155,.08)}
+.wiz-head{padding:20px 22px 15px;border-bottom:1.5px solid var(--border);background:var(--teal-pale)}
+.wiz-lbl{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:7px}
+.wiz-q{font-size:19px;font-weight:900;color:var(--text);letter-spacing:-.02em;line-height:1.2;margin-bottom:5px}
 .wiz-sub{font-size:12px;color:var(--text2);line-height:1.5}
 
-.wiz-info{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:7px}
+.wiz-info{padding:13px 22px;border-bottom:1.5px solid var(--border);display:flex;flex-direction:column;gap:7px;background:#fafcfe}
 .wiz-info-row{display:flex;align-items:flex-start;gap:9px}
-.wiz-info-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:7px}
+.wiz-info-dot{width:5px;height:5px;border-radius:50%;background:var(--teal-mid);flex-shrink:0;margin-top:7px}
 .wiz-info-txt{font-size:12px;color:var(--text2);line-height:1.55}
 
-.wiz-choices{padding:16px 24px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
-.wiz-choice{padding:13px 16px;border-radius:11px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px}
-.wiz-choice:hover{border-color:var(--blue);transform:translateX(3px);background:var(--blue-pale)}
-.wiz-choice-label{font-size:13px;font-weight:800;color:var(--text);flex:1}
+.wiz-choices{padding:14px 22px;display:flex;flex-direction:column;gap:8px}
+.wiz-choice{padding:13px 15px;border-radius:11px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:11px}
+.wiz-choice:hover{border-color:var(--teal);background:var(--teal-pale);box-shadow:0 2px 10px rgba(0,176,155,.1)}
+.wiz-choice-label{font-size:13px;font-weight:700;color:var(--text);flex:1}
 .wiz-choice-sub{font-size:10.5px;color:var(--text3);margin-top:2px}
-.wiz-choice-arr{color:var(--text3);font-size:14px;flex-shrink:0}
+.wiz-choice-arr{color:var(--text3);font-size:14px;flex-shrink:0;transition:transform .15s}
+.wiz-choice:hover .wiz-choice-arr{transform:translateX(2px);color:var(--teal)}
 
-.wiz-foot{padding:11px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.wiz-back{background:transparent;border:1.5px solid var(--border);color:var(--text3);font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
-.wiz-back:hover{border-color:var(--blue);color:var(--blue)}
+.wiz-foot{padding:11px 22px;border-top:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fafcfe}
+.wiz-back{background:transparent;border:1.5px solid var(--border);color:var(--text3);font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .18s}
+.wiz-back:hover{border-color:var(--teal);color:var(--teal)}
 .wiz-depth{font-size:10px;color:var(--text3);font-weight:600;font-family:'JetBrains Mono',monospace}
 
-/* terminal states */
-.wiz-terminal{padding:36px 24px;text-align:center}
-.wiz-term-icon{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:22px;background:var(--blue-light)}
-.wiz-term-title{font-size:21px;font-weight:900;margin-bottom:8px;color:var(--text)}
-.wiz-term-msg{font-size:12px;color:var(--text2);line-height:1.65;max-width:380px;margin:0 auto 22px}
+/* terminal */
+.wiz-terminal{padding:36px 24px;text-align:center;background:var(--surface)}
+.wiz-term-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.wiz-term-title{font-size:20px;font-weight:900;margin-bottom:7px;color:var(--text)}
+.wiz-term-msg{font-size:12.5px;color:var(--text2);line-height:1.65;max-width:380px;margin:0 auto 22px}
 .wiz-term-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.wiz-term-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif}
+.wiz-term-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity .15s}
+.wiz-term-btn:hover{opacity:.87}
 
-/* ════ STEPPER (flowchart reference) ════ */
-.stepper{display:flex;flex-direction:column;gap:0;max-width:820px}
-.step-row{display:flex;gap:20px;cursor:pointer}
-.step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:42px}
-.step-circle{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border:2.5px solid var(--border);background:var(--surface);color:var(--text3);flex-shrink:0;transition:all .25s}
-.step-row.open .step-circle{border-color:var(--blue);background:var(--blue);color:#fff;box-shadow:0 0 0 5px rgba(37,150,190,.15)}
-.step-row.done .step-circle{border-color:#059669;background:#059669;color:#fff}
-.step-line{flex:1;width:2px;background:var(--border);min-height:14px;transition:background .25s}
-.step-row.done .step-line{background:#059669}
-.step-row.open .step-line{background:var(--blue)}
-.step-right{flex:1;padding-bottom:6px}
-.step-hdr{display:flex;align-items:center;gap:10px;padding:10px 0;min-height:42px}
+/* ═══════════════════════════════════════════════════════
+   STEPPER
+═══════════════════════════════════════════════════════ */
+.stepper{display:flex;flex-direction:column}
+.step-row{display:flex;gap:18px;cursor:pointer}
+.step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:40px}
+.step-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;border:2px solid var(--border);background:var(--surface);color:var(--text3);flex-shrink:0;transition:all .22s}
+.step-row.open .step-circle{border-color:var(--teal);background:var(--teal);color:#fff;box-shadow:0 0 0 5px rgba(0,176,155,.13)}
+.step-row.done .step-circle{border-color:var(--green);background:var(--green);color:#fff}
+.step-line{flex:1;width:2px;background:var(--border);min-height:14px;transition:background .22s}
+.step-row.done .step-line{background:var(--green)}
+.step-row.open .step-line{background:var(--teal)}
+.step-right{flex:1;padding-bottom:4px}
+.step-hdr{display:flex;align-items:center;gap:10px;padding:10px 0;min-height:40px}
 .step-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);font-weight:700;letter-spacing:.06em}
-.step-name{font-size:15px;font-weight:800;line-height:1.2}
-.step-tag{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-left:auto;flex-shrink:0}
-.step-body{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:16px 18px;margin:0 0 18px;display:none}
+.step-name{font-size:14px;font-weight:800;line-height:1.2;color:var(--text)}
+.step-tag{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-left:auto;flex-shrink:0}
+.step-body{background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 17px;margin:0 0 16px;display:none}
 .step-row.open .step-body{display:block}
-.step-pts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.step-pts{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
 .step-pt{display:flex;gap:9px;align-items:flex-start;padding:8px 10px;background:var(--surface2);border-radius:9px}
 .step-pt-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px}
 .step-pt-txt{font-size:12px;color:var(--text2);line-height:1.5}
-.step-branch{border-radius:11px;overflow:hidden;border:2px solid var(--border);margin-top:4px;margin-bottom:12px}
+.step-branch{border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:12px}
 .sb-hdr{padding:7px 12px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border)}
 .sb-row{display:flex;border-bottom:1px solid var(--border)}
 .sb-row:last-child{border-bottom:none}
-.sb-cond{padding:9px 12px;font-size:11px;font-weight:700;min-width:130px;border-right:1px solid var(--border);flex-shrink:0}
-.sb-out{padding:9px 12px;font-size:11px;color:var(--text2);flex:1;line-height:1.4}
-.step-tools-row{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
-.tool-chip{display:inline-block;padding:3px 10px;border-radius:7px;font-size:10px;font-weight:700;background:var(--blue-light);color:var(--blue2);border:1.5px solid var(--border);text-decoration:none;transition:all .2s;cursor:pointer}
-.tool-chip:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
-.step-next-btn{margin-top:12px;padding:9px 18px;background:var(--blue);color:#e2e8f0;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s}
-.step-next-btn:hover{background:var(--blue2)}
+.sb-cond{padding:8px 12px;font-size:11px;font-weight:700;min-width:130px;border-right:1px solid var(--border);flex-shrink:0}
+.sb-out{padding:8px 12px;font-size:11px;color:var(--text2);flex:1;line-height:1.4}
+.step-tools-row{display:flex;flex-wrap:wrap;gap:5px;padding-top:10px;border-top:1px solid var(--border);margin-bottom:10px}
+.tool-chip{display:inline-block;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal-dark);border:1.5px solid var(--border2);transition:all .15s;cursor:pointer;text-decoration:none}
+.tool-chip:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+.step-next-btn{margin-top:10px;padding:9px 18px;background:var(--teal);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s}
+.step-next-btn:hover{background:var(--teal-dark)}
 
-/* ════ GUIDELINES PAGE ════ */
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
-.kpi-card{background:var(--surface);border-radius:14px;border:2px solid var(--border);padding:18px}
+/* ═══════════════════════════════════════════════════════
+   GUIDELINES
+═══════════════════════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:22px}
+.kpi-card{background:var(--surface);border-radius:14px;border:1.5px solid var(--border);padding:18px 20px}
 .kpi-num{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
-.kpi-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.kpi-label{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
 .kpi-sub{font-size:11px;color:var(--text3);margin-top:3px}
-.rules-card{background:var(--surface);border-radius:14px;border:2px solid var(--border);padding:20px;margin-bottom:16px}
-.rules-card h3{font-size:14px;font-weight:800;margin-bottom:14px;letter-spacing:-.01em}
+.rules-card{background:var(--surface);border-radius:14px;border:1.5px solid var(--border);padding:20px;margin-bottom:14px}
+.rules-card h3{font-size:14px;font-weight:800;margin-bottom:14px;letter-spacing:-.01em;color:var(--text)}
 .rule-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--border)}
 .rule-row:first-of-type{border-top:none}
 .rule-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);font-weight:600;flex-shrink:0;padding-top:2px}
 .rule-txt{font-size:13px;color:var(--text2);line-height:1.55}
 .rule-txt strong{color:var(--text);font-weight:700}
-.section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:12px}
-
-/* Donut */
-.donut-wrap{display:flex;align-items:center;gap:24px}
+.section-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px}
+.donut-wrap{display:flex;align-items:center;gap:22px}
 .donut-legend{display:flex;flex-direction:column;gap:9px;flex:1}
 .legend-row{display:flex;align-items:center;gap:9px}
 .legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 .legend-label{font-size:12px;color:var(--text2);flex:1}
 .legend-val{font-size:12px;font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace}
 
-/* ════ TOOLKIT PAGE ════ */
+/* ═══════════════════════════════════════════════════════
+   TOOLKIT
+═══════════════════════════════════════════════════════ */
 .tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.tool-card{background:var(--surface);border-radius:16px;border:2px solid var(--border);overflow:hidden;display:flex;flex-direction:column;transition:all .2s}
-.tool-card:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(37,150,190,.12);transform:translateY(-2px)}
-.tool-card-top{padding:14px 16px;border-bottom:2px solid var(--border);background:var(--surface2)}
+.tool-card{background:var(--surface);border-radius:15px;border:1.5px solid var(--border);overflow:hidden;display:flex;flex-direction:column;transition:all .18s}
+.tool-card:hover{border-color:var(--teal);box-shadow:0 6px 22px rgba(0,176,155,.13);transform:translateY(-2px)}
+.tool-card-top{padding:14px 16px;border-bottom:1.5px solid var(--border);background:var(--surface2)}
 .tool-type-badge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-bottom:6px}
-.tool-name{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.tool-name{font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--text)}
 .tool-card-body{padding:14px 16px;flex:1;display:flex;flex-direction:column}
-.tool-desc{font-size:12px;color:var(--text2);line-height:1.6;flex:1;margin-bottom:16px}
-.tool-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;background:var(--surface2);border:2px solid var(--border);border-radius:10px;font-size:12px;font-weight:700;color:var(--text);text-decoration:none;transition:all .2s;cursor:pointer}
-.tool-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tool-desc{font-size:12px;color:var(--text2);line-height:1.6;flex:1;margin-bottom:14px}
+.tool-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-weight:700;color:var(--text2);text-decoration:none;transition:all .18s;cursor:pointer}
+.tool-btn:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
 
 /* FOOTER */
-footer{padding:28px 24px;text-align:center;color:var(--text3);font-size:11px;border-top:1px solid var(--border);margin-top:40px}
+footer{padding:24px 28px;text-align:center;color:var(--text3);font-size:11px;border-top:1px solid var(--border);margin-top:36px}
 </style>
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════════════════
+     SPLASH SCREEN
+═══════════════════════════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-grid"></div>
+  <div class="splash-glow"></div>
+  <div class="splash-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+
+  <div class="splash-center">
+    <div class="splash-logo-mark">
+      <svg class="splash-logo-svg" viewBox="0 0 36 36" fill="none">
+        <path d="M6 18 L18 6 L30 18 L18 30 Z" fill="rgba(255,255,255,.25)" stroke="white" stroke-width="1.5"/>
+        <path d="M12 18 L18 12 L24 18 L18 24 Z" fill="white"/>
+        <path d="M18 6 L18 12 M18 24 L18 30 M6 18 L12 18 M24 18 L30 18" stroke="rgba(255,255,255,.6)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="splash-wordmark">
+      <h1>Edgistify</h1>
+      <p>Sales Operations Platform</p>
+    </div>
+
+    <div class="splash-welcome">
+      <p>Welcome to your <strong>Lead Qualification Hub</strong>.<br>
+      Your complete guide to pipeline, process, and performance.</p>
+    </div>
+
+    <div class="splash-progress-wrap">
+      <div class="splash-progress-track">
+        <div class="splash-progress-bar" id="splash-bar"></div>
+      </div>
+      <div class="splash-progress-label" id="splash-label">Loading workspace...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     APP
+═══════════════════════════════════════════════════════ -->
+<div id="app">
+
 <nav class="nav">
   <div class="nav-inner">
     <div class="nav-logo">
-      <div class="nav-logo-dot"></div>
-      Edgistify &nbsp;<span style="font-weight:400;font-size:13px;color:#64748b">Sales Operations</span>
+      <div class="nav-logo-box">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M2 8 L8 2 L14 8 L8 14 Z" fill="rgba(255,255,255,.3)" stroke="white" stroke-width="1"/>
+          <path d="M5 8 L8 5 L11 8 L8 11 Z" fill="white"/>
+        </svg>
+      </div>
+      Edgistify <span class="nav-sub">/ Sales Ops</span>
     </div>
     <div class="nav-tabs">
       <button class="nav-tab active" onclick="showPage('outreach',this)">Outreach Guide</button>
@@ -169,12 +402,11 @@ footer{padding:28px 24px;text-align:center;color:var(--text3);font-size:11px;bor
 
 <div class="main">
 
-  <!-- ═══════════════════════════════════ OUTREACH PAGE -->
+  <!-- OUTREACH PAGE -->
   <div id="page-outreach" class="page active">
-
     <div class="page-header">
       <h1>Outreach Guide</h1>
-      <p>Step through the process live or use the reference stepper below.</p>
+      <p>Step through the process live with the wizard, or use the process reference stepper.</p>
     </div>
 
     <div class="subtab-bar">
@@ -182,30 +414,32 @@ footer{padding:28px 24px;text-align:center;color:var(--text3);font-size:11px;bor
       <button class="subtab" onclick="showSubtab('stepper',this)">Process Reference</button>
     </div>
 
-    <!-- WIZARD -->
-    <div id="sub-wizard" class="wiz-wrap">
-      <div id="wiz-trail" class="wiz-trail"></div>
-      <div id="wiz-stage"></div>
-    </div>
+    <div class="outreach-layout">
+      <!-- MAIN CONTENT -->
+      <div class="outreach-main">
+        <div id="sub-wizard">
+          <div id="wiz-trail" class="wiz-trail"></div>
+          <div id="wiz-stage"></div>
+        </div>
+        <div id="sub-stepper" style="display:none">
+          <div class="stepper" id="stepper-list"></div>
+        </div>
+      </div>
 
-    <!-- STEPPER -->
-    <div id="sub-stepper" style="display:none">
-      <div class="stepper" id="stepper-list"></div>
+      <!-- SIDEBAR -->
+      <div class="sidebar" id="outreach-sidebar"></div>
     </div>
-
   </div>
 
-  <!-- ═══════════════════════════════════ GUIDELINES PAGE -->
+  <!-- GUIDELINES PAGE -->
   <div id="page-guidelines" class="page">
     <div class="page-header">
       <h1>Guidelines &amp; KPIs</h1>
       <p>Performance targets, deal mix, and non-negotiable rules for the sales team.</p>
     </div>
-
-    <div class="section-title">Monthly KPI Targets</div>
+    <div class="section-label">Monthly KPI Targets</div>
     <div class="kpi-grid" id="kpi-grid"></div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
       <div class="rules-card">
         <h3>Deal Mix Target</h3>
         <div class="donut-wrap">
@@ -218,17 +452,16 @@ footer{padding:28px 24px;text-align:center;color:var(--text3);font-size:11px;bor
         <div class="rule-row"><span class="rule-num">01</span><span class="rule-txt"><strong>25 sprint leads</strong> per week minimum — assigned by management.</span></div>
         <div class="rule-row"><span class="rule-num">02</span><span class="rule-txt"><strong>3 contacts minimum</strong> for all A &amp; B accounts before any Junk decision.</span></div>
         <div class="rule-row"><span class="rule-num">03</span><span class="rule-txt"><strong>60 days</strong> is the default follow-up task when no date is given.</span></div>
-        <div class="rule-row"><span class="rule-num">04</span><span class="rule-txt"><strong>15-day</strong> re-engagement window for A &amp; B leads after follow-up task fires.</span></div>
+        <div class="rule-row"><span class="rule-num">04</span><span class="rule-txt"><strong>15-day</strong> re-engagement window for A &amp; B leads after follow-up fires.</span></div>
       </div>
     </div>
-
     <div class="rules-card">
       <h3>Non-Negotiable Rules</h3>
       <div id="golden-rules"></div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════ TOOLKIT PAGE -->
+  <!-- TOOLKIT PAGE -->
   <div id="page-toolkit" class="page">
     <div class="page-header">
       <h1>Operational Toolkit</h1>
@@ -237,13 +470,49 @@ footer{padding:28px 24px;text-align:center;color:var(--text3);font-size:11px;bor
     <div class="tools-grid" id="tools-grid"></div>
   </div>
 
-</div>
+</div><!-- /main -->
 
 <footer>
   <p>Edgistify Internal Operations &nbsp;·&nbsp; Lead Qualification Framework v4.0 &nbsp;·&nbsp; Internal Use Only</p>
 </footer>
 
+</div><!-- /app -->
+
 <script>
+/* ═══════════════════════════════════════════════════════
+   SPLASH LOGIC
+═══════════════════════════════════════════════════════ */
+const labels = ['Loading workspace...','Preparing your pipeline...','Almost there...','Ready.'];
+let pct = 0;
+const bar = document.getElementById('splash-bar');
+const lbl = document.getElementById('splash-label');
+
+// Start progress after 1.5s (allow animations to settle)
+setTimeout(() => {
+  const interval = setInterval(() => {
+    pct += 1.4;
+    bar.style.width = Math.min(pct, 100) + '%';
+    if (pct > 20 && pct < 40) lbl.textContent = labels[1];
+    if (pct > 60 && pct < 80) lbl.textContent = labels[2];
+    if (pct >= 98) {
+      lbl.textContent = labels[3];
+      clearInterval(interval);
+      bar.style.width = '100%';
+      setTimeout(launchApp, 400);
+    }
+  }, 28);
+}, 1500);
+
+function launchApp() {
+  const splash = document.getElementById('splash');
+  const app = document.getElementById('app');
+  splash.classList.add('exiting');
+  setTimeout(() => {
+    splash.style.display = 'none';
+    app.classList.add('visible');
+  }, 600);
+}
+
 /* ═══════════════════════════════════════════════════════
    NAVIGATION
 ═══════════════════════════════════════════════════════ */
@@ -255,177 +524,253 @@ function showPage(id, btn) {
 }
 
 function showSubtab(id, btn) {
-  document.getElementById('sub-wizard').style.display = id === 'wizard' ? '' : 'none';
+  document.getElementById('sub-wizard').style.display  = id === 'wizard'  ? '' : 'none';
   document.getElementById('sub-stepper').style.display = id === 'stepper' ? '' : 'none';
   document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
 }
 
 /* ═══════════════════════════════════════════════════════
-   WIZARD
+   TOOL DATA
+═══════════════════════════════════════════════════════ */
+const TOOLS = [
+  {
+    id:'portal', name:'Sales Portal', type:'Internal', typeBg:'#dbeafe', typeColor:'#1e40af',
+    desc:'Pipeline management, lead tracking, and internal sales operations hub.',
+    url:'https://sales.edgistify.com/', dl:false,
+    iconColor:'#1d6a8f', iconBg:'#e8f5fb',
+    steps:['all']
+  },
+  {
+    id:'category', name:'Client Category Tool', type:'Gemini AI', typeBg:'#ede9fe', typeColor:'#5b21b6',
+    desc:'Categorise leads as A, B, C or D based on revenue and logistics relevance.',
+    url:'https://gemini.google.com/gem/1Y8ZoClIZ1nEJP6kv6vIPs8gmH6l0rA7n?usp=sharing', dl:false,
+    iconColor:'#7c3aed', iconBg:'#f5f3ff',
+    steps:['all']
+  },
+  {
+    id:'hook', name:'Sales Hook Tool', type:'Gemini AI', typeBg:'#ede9fe', typeColor:'#5b21b6',
+    desc:'Build trigger-event hooks and personalised outreach angles for each lead.',
+    url:'https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YlFhiA2FYTtS1XbA?usp=sharing', dl:false,
+    iconColor:'#7c3aed', iconBg:'#f5f3ff',
+    steps:['all']
+  },
+  {
+    id:'lusha', name:'Lusha', type:'Enrichment', typeBg:'#fef3c7', typeColor:'#78350f',
+    desc:'Mobile numbers and verified email addresses for decision makers.',
+    url:'https://www.lusha.com', dl:false,
+    iconColor:'#d97706', iconBg:'#fffbeb',
+    steps:['all']
+  },
+  {
+    id:'signal', name:'SignalHire', type:'Enrichment', typeBg:'#fef3c7', typeColor:'#78350f',
+    desc:'In-depth decision maker profiles and contact discovery.',
+    url:'https://www.signalhire.com', dl:false,
+    iconColor:'#d97706', iconBg:'#fffbeb',
+    steps:['all']
+  },
+  {
+    id:'tracxn', name:'Tracxn', type:'Research', typeBg:'#f1f5f9', typeColor:'#334155',
+    desc:'Startup data, funding history, and revenue estimates.',
+    url:'https://tracxn.com', dl:false,
+    iconColor:'#475569', iconBg:'#f1f5f9',
+    steps:['all']
+  },
+  {
+    id:'pdf', name:'Workflow PDF', type:'Official Guide', typeBg:'#dcfce7', typeColor:'#14532d',
+    desc:'Complete process reference for the lead qualification framework.',
+    url:'https://drive.google.com/uc?export=download&id=14nzhPHaAj9EGxET2OgJQjkbaLE48jrD4', dl:true,
+    iconColor:'#059669', iconBg:'#f0fdf4',
+    steps:['all']
+  },
+];
+
+// SVG icons per tool type
+const SVG_ICONS = {
+  portal:   '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  category: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+  hook:     '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  lusha:    '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.35 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.58a16 16 0 0 0 6 6l.54-.54a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>',
+  signal:   '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/>',
+  tracxn:   '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  pdf:      '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
+};
+
+/* ═══════════════════════════════════════════════════════
+   SIDEBAR RENDER
+═══════════════════════════════════════════════════════ */
+function renderSidebar() {
+  const sidebar = document.getElementById('outreach-sidebar');
+  sidebar.innerHTML = `
+    <div class="sidebar-title">Tools for this step</div>
+    ${TOOLS.map(t => `
+      <a class="sidebar-tool" href="${t.url}" ${t.dl ? 'download' : 'target="_blank" rel="noopener"'}>
+        <div class="sidebar-tool-icon" style="background:${t.iconBg}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="${t.iconColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            ${SVG_ICONS[t.id] || ''}
+          </svg>
+        </div>
+        <div class="sidebar-tool-info">
+          <div class="sidebar-tool-name">${t.name}</div>
+          <div class="sidebar-tool-type">${t.type}</div>
+        </div>
+        <span class="sidebar-tool-arr">›</span>
+      </a>`).join('')}
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-note">
+      <p><strong>Quick tip:</strong> Open the Sales Hook Tool before each call and paste the company name + trigger event for a personalised opener in seconds.</p>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   WIZARD DATA
 ═══════════════════════════════════════════════════════ */
 const WIZ = {
-  start: {
-    title: 'New Lead Arrives',
-    sub: 'Where did this lead come from?',
-    info: ['Check whether this is a Sprint (management-assigned) lead or one you sourced yourself.'],
-    choices: [
-      { label: 'Sprint Lead', sub: 'Management assigned, pre-vetted', next: 'sprint_trigger' },
-      { label: 'Self-Sourced Lead', sub: 'Found via Tracxn / LinkedIn / database', next: 'research' },
+  start:{
+    title:'New Lead Arrives', sub:'Where did this lead come from?',
+    info:['Check whether this is a Sprint (management-assigned) lead or one you sourced yourself.'],
+    choices:[
+      {label:'Sprint Lead',       sub:'Management assigned, pre-vetted',            next:'sprint_trigger'},
+      {label:'Self-Sourced Lead', sub:'Found via Tracxn / LinkedIn / database',     next:'research'},
     ]
   },
-  research: {
-    title: 'Sales Research Sprint',
-    sub: 'Complete your research before moving forward.',
-    info: [
+  research:{
+    title:'Sales Research Sprint', sub:'Complete your research before moving forward.',
+    info:[
       'Company size, revenue, vertical and geographic presence.',
       'Identify: Founder / CEO / VP Supply Chain / Head of Logistics.',
       'Recent signals: funding, expansion, leadership hires, job postings.',
-      'Tools: Tracxn for revenue estimates · Lusha / SignalHire for contacts.',
+      'Use Tracxn for revenue estimates and Lusha / SignalHire for contacts.',
     ],
-    choices: [
-      { label: 'Research complete', sub: 'Company profile and DM names ready', next: 'categorise' }
-    ]
+    choices:[{label:'Research complete', sub:'Company profile and DM names ready', next:'categorise'}]
   },
-  categorise: {
-    title: 'Categorise the Lead',
-    sub: 'Use the Client Category Gemini Tool. What category is this lead?',
-    info: [
-      'A = Rs.100Cr+ turnover · B = Rs.50–100Cr · C = Rs.10–50Cr · D = Under Rs.10Cr',
+  categorise:{
+    title:'Categorise the Lead', sub:'Use the Client Category Tool. What category is this lead?',
+    info:[
+      'A = Rs.100Cr+ · B = Rs.50-100Cr · C = Rs.10-50Cr · D = Under Rs.10Cr',
       'Log the category in Zoho immediately after confirming.',
     ],
-    choices: [
-      { label: 'Category A or B', sub: 'Rs.50Cr+ — high logistics potential', next: 'sprint_trigger' },
-      { label: 'Category C or D', sub: 'Under Rs.50Cr — standard priority', next: 'sprint_trigger' },
+    choices:[
+      {label:'Category A or B', sub:'Rs.50Cr+ — high logistics potential', next:'sprint_trigger'},
+      {label:'Category C or D', sub:'Under Rs.50Cr — standard priority',   next:'sprint_trigger'},
     ]
   },
-  sprint_trigger: {
-    title: 'Trigger Events & Sales Hook',
-    sub: 'Identify the live signal and build your opening angle.',
-    info: [
+  sprint_trigger:{
+    title:'Trigger Events & Sales Hook', sub:'Identify the live signal and build your opening angle.',
+    info:[
       'Signals: recent funding / new SKU launch / geographic expansion / ops leadership hire.',
       'Use the Sales Hook Gemini Tool to craft a personalised opening line.',
       'Log source, category, trigger and all notes in Zoho Sprint Plan.',
     ],
-    choices: [
-      { label: 'Hook ready — Zoho updated', sub: 'CRM logged, outreach task set', next: 'outreach' }
-    ]
+    choices:[{label:'Hook ready — Zoho updated', sub:'CRM logged, outreach task set', next:'outreach'}]
   },
-  outreach: {
-    title: 'Outreach Attempt',
-    sub: 'Call / Email / LinkedIn. Did you connect with someone?',
-    info: [
+  outreach:{
+    title:'Outreach Attempt', sub:'Call / Email / LinkedIn. Did you connect?',
+    info:[
       'Target DMs only: Founder, CEO, VP SCM, Head of Logistics.',
-      'Lead every contact with the trigger event — make it specific and relevant.',
+      'Lead every contact with the trigger event — make the reason specific.',
     ],
-    choices: [
-      { label: 'Connected — someone responded', sub: '', next: 'relevant' },
-      { label: 'No response — all channels tried', sub: '', next: 'retry_outreach' },
+    choices:[
+      {label:'Connected — someone responded', sub:'', next:'relevant'},
+      {label:'No response — all channels tried', sub:'', next:'retry_outreach'},
     ]
   },
-  retry_outreach: {
-    terminal: true, result: 'retry',
-    title: 'Retry Outreach',
-    msg: 'Rotate channel: call → email → LinkedIn. Update the Zoho task and try again.',
-    restartAt: 'outreach', restartLabel: 'Back to Outreach'
+  retry_outreach:{
+    terminal:true, result:'retry',
+    title:'Retry Outreach',
+    msg:'Rotate channel: call to email to LinkedIn. Update the Zoho task and try again.',
+    restartAt:'outreach', restartLabel:'Back to Outreach'
   },
-  relevant: {
-    title: 'Relevant Contact?',
-    sub: 'Is the person you reached the actual decision maker?',
-    info: ['Decision maker = Founder, CEO, VP SCM, Head of Logistics, Director of Operations.'],
-    choices: [
-      { label: 'Yes — correct decision maker', sub: '', next: 'qualify' },
-      { label: 'No — wrong contact', sub: 'Gatekeeper or unrelated role', next: 'find_dm' },
+  relevant:{
+    title:'Relevant Contact?', sub:'Is the person you reached the actual decision maker?',
+    info:['Decision maker = Founder, CEO, VP SCM, Head of Logistics, Director of Operations.'],
+    choices:[
+      {label:'Yes — correct decision maker', sub:'',                            next:'qualify'},
+      {label:'No — wrong contact',           sub:'Gatekeeper or unrelated role', next:'find_dm'},
     ]
   },
-  find_dm: {
-    terminal: true, result: 'retry',
-    title: 'Find the Right Contact',
-    msg: 'Never close because you hit a gatekeeper. Use Lusha or SignalHire to identify the correct DM and retry outreach.',
-    restartAt: 'outreach', restartLabel: 'Back to Outreach'
+  find_dm:{
+    terminal:true, result:'retry',
+    title:'Find the Right Contact',
+    msg:'Never close because you hit a gatekeeper. Use Lusha or SignalHire to identify the correct DM and retry outreach.',
+    restartAt:'outreach', restartLabel:'Back to Outreach'
   },
-  qualify: {
-    title: 'Requirement Check',
-    sub: 'Full service walkthrough completed. Was a requirement found?',
-    info: [
-      'Pitch ALL services: warehousing · fulfilment · last-mile · reverse logistics · tech platform.',
-      'Never mark No Requirement without completing the full service walkthrough.',
+  qualify:{
+    title:'Requirement Check', sub:'Full service walkthrough completed. Was a requirement found?',
+    info:[
+      'Pitch ALL services: warehousing, fulfilment, last-mile, reverse logistics, tech platform.',
+      'Never mark No Requirement without completing the full walkthrough.',
     ],
-    choices: [
-      { label: 'Requirement confirmed', sub: 'At least one service line is a fit', next: 'qualified_end' },
-      { label: 'No requirement found', sub: 'Full walkthrough done, no current fit', next: 'followup_time' },
+    choices:[
+      {label:'Requirement confirmed',  sub:'At least one service line is a fit',     next:'qualified_end'},
+      {label:'No requirement found',   sub:'Full walkthrough done, no current fit',   next:'followup_time'},
     ]
   },
-  qualified_end: {
-    terminal: true, result: 'qualified',
-    title: 'Qualified',
-    msg: 'Mark as Qualified in Zoho. Schedule the product demo. Update all notes before closing the task.',
-    restartAt: null
+  qualified_end:{
+    terminal:true, result:'qualified',
+    title:'Qualified',
+    msg:'Mark as Qualified in Zoho. Schedule the product demo. Update all notes before closing the task.',
+    restartAt:null
   },
-  followup_time: {
-    title: 'Client Specified a Follow-Up Time?',
-    sub: 'Did the client give you a date to reconnect?',
-    info: ['Every lead must leave with a next action — no exceptions.'],
-    choices: [
-      { label: 'Yes — specific date given', sub: 'Client mentioned a reconnect date', next: 'task_specific' },
-      { label: 'No date provided', sub: 'Open-ended or no response', next: 'task_60' },
+  followup_time:{
+    title:'Client Specified a Follow-Up Time?', sub:'Did the client give you a date to reconnect?',
+    info:['Every lead must leave with a next action — no exceptions.'],
+    choices:[
+      {label:'Yes — specific date given', sub:'Client mentioned a reconnect date', next:'task_specific'},
+      {label:'No date provided',          sub:'Open-ended or no response',          next:'task_60'},
     ]
   },
-  task_specific: {
-    title: 'Task Created for Specified Date',
-    sub: 'Zoho task logged for the exact date. What is this lead\'s category?',
-    info: ['A & B leads require additional DM outreach before you can close the loop.'],
-    choices: [
-      { label: 'Category A or B', sub: 'Rs.50Cr+ — work through additional DMs', next: 'dm2' },
-      { label: 'Category C or D', sub: 'Lower priority — task is set, loop back when due', next: 'loop_cd' },
+  task_specific:{
+    title:'Task Created for Specified Date', sub:'Zoho task logged. What is this lead\'s category?',
+    info:['A & B leads require additional DM outreach before you can close the loop.'],
+    choices:[
+      {label:'Category A or B', sub:'Rs.50Cr+ — work through additional DMs',       next:'dm2'},
+      {label:'Category C or D', sub:'Lower priority — task is set, loop back when due', next:'loop_cd'},
     ]
   },
-  task_60: {
-    title: '60-Day Task Created',
-    sub: 'Default Zoho task set for 60 days. What is this lead\'s category?',
-    info: ['A & B leads get an additional DM outreach attempt before waiting.'],
-    choices: [
-      { label: 'Category A or B', sub: 'Rs.50Cr+ — work through additional DMs', next: 'dm2' },
-      { label: 'Category C or D', sub: 'Lower priority — task is set, loop back when due', next: 'loop_cd' },
+  task_60:{
+    title:'60-Day Task Created', sub:'Default task set for 60 days. What is this lead\'s category?',
+    info:['A & B leads get an additional DM outreach attempt before waiting.'],
+    choices:[
+      {label:'Category A or B', sub:'Rs.50Cr+ — work through additional DMs',       next:'dm2'},
+      {label:'Category C or D', sub:'Lower priority — task is set, loop back when due', next:'loop_cd'},
     ]
   },
-  loop_cd: {
-    terminal: true, result: 'retry',
-    title: 'Task Set — Return When Due',
-    msg: 'C / D category: task is logged in Zoho. Return to the outreach step when the follow-up date arrives.',
-    restartAt: 'outreach', restartLabel: 'Back to Outreach'
+  loop_cd:{
+    terminal:true, result:'retry',
+    title:'Task Set — Return When Due',
+    msg:'C / D category: task is logged in Zoho. Return to the outreach step when the follow-up date arrives.',
+    restartAt:'outreach', restartLabel:'Back to Outreach'
   },
-  dm2: {
-    title: '2nd Decision Maker',
-    sub: 'Reach a second DM at the same company. Was a requirement found?',
-    info: [
+  dm2:{
+    title:'2nd Decision Maker', sub:'Reach a second DM at the same company. Was a requirement found?',
+    info:[
       'Identify a 2nd DM: VP, Director, or Co-Founder.',
       'Use Lusha or SignalHire for a fresh contact.',
       'Log all attempts under the same company record in Zoho.',
     ],
-    choices: [
-      { label: 'Requirement confirmed', sub: '', next: 'qualified_end' },
-      { label: 'No requirement — try a third contact', sub: '', next: 'dm3' },
+    choices:[
+      {label:'Requirement confirmed',             sub:'', next:'qualified_end'},
+      {label:'No requirement — try a third contact', sub:'', next:'dm3'},
     ]
   },
-  dm3: {
-    title: '3rd Decision Maker',
-    sub: 'Final attempt — most senior available DM. Requirement found?',
-    info: [
+  dm3:{
+    title:'3rd Decision Maker', sub:'Final attempt — most senior available DM. Requirement found?',
+    info:[
       'Last attempt: most senior remaining DM at the company.',
       'Switch channel if previous attempts failed.',
       'Log everything in Zoho before making any Junk decision.',
     ],
-    choices: [
-      { label: 'Requirement confirmed', sub: '', next: 'qualified_end' },
-      { label: 'No — all 3 DMs exhausted', sub: 'No requirement across all contacts', next: 'junk_end' },
+    choices:[
+      {label:'Requirement confirmed',           sub:'',                               next:'qualified_end'},
+      {label:'No — all 3 DMs exhausted',        sub:'No requirement across all contacts', next:'junk_end'},
     ]
   },
-  junk_end: {
-    terminal: true, result: 'junk',
-    title: 'Mark as Junk',
-    msg: 'All 3 decision makers contacted — no requirement found. Mark as Junk in Zoho with full notes and contact details.',
-    restartAt: null
+  junk_end:{
+    terminal:true, result:'junk',
+    title:'Mark as Junk',
+    msg:'All 3 decision makers contacted — no requirement found. Mark as Junk in Zoho with full notes and contact details.',
+    restartAt:null
   },
 };
 
@@ -433,41 +778,43 @@ let wizHistory = ['start'];
 
 function renderWizard() {
   const nodeId = wizHistory[wizHistory.length - 1];
-  const node = WIZ[nodeId];
-  const depth = wizHistory.length;
+  const node   = WIZ[nodeId];
+  const depth  = wizHistory.length;
 
   // Trail
   const trail = document.getElementById('wiz-trail');
-  if (wizHistory.length > 1) {
-    trail.innerHTML = wizHistory.slice(0, -1).map((id, i) =>
-      (i > 0 ? '<span class="wiz-sep">›</span>' : '') +
-      `<span class="wiz-crumb">${WIZ[id].title}</span>`
-    ).join('');
-  } else {
-    trail.innerHTML = '';
-  }
+  trail.innerHTML = wizHistory.length > 1
+    ? wizHistory.slice(0,-1).map((id,i) =>
+        (i > 0 ? '<span class="wiz-sep">›</span>' : '') +
+        `<span class="wiz-crumb">${WIZ[id].title}</span>`
+      ).join('')
+    : '';
 
   const stage = document.getElementById('wiz-stage');
 
   if (node.terminal) {
-    const colors = { qualified: '#2596be', retry: '#d97706', junk: '#94a3b8' };
-    const titleColors = { qualified: '#0d7a9a', retry: '#d97706', junk: '#64748b' };
-    const c = colors[node.result];
+    const palette = {
+      qualified: {bg:'#d1fae5', icon:'#059669', titleColor:'#065f46',  btnBg:'#059669'},
+      retry:     {bg:'#fef3c7', icon:'#d97706', titleColor:'#78350f',  btnBg:'#d97706'},
+      junk:      {bg:'#f1f5f9', icon:'#64748b', titleColor:'#334155',  btnBg:'#475569'},
+    };
+    const p = palette[node.result];
+    const icons = {
+      qualified: '<polyline points="20 6 9 17 4 12"/>',
+      retry:     '<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>',
+      junk:      '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/>',
+    };
     stage.innerHTML = `
       <div class="wiz-card">
         <div class="wiz-terminal">
-          <div class="wiz-term-icon" style="background:var(--blue-light)">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              ${node.result === 'qualified' ? '<polyline points="20 6 9 17 4 12"></polyline>' :
-                node.result === 'junk' ? '<polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path>' :
-                '<polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-3.51"></path>'}
-            </svg>
+          <div class="wiz-term-icon" style="background:${p.bg}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${p.icon}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${icons[node.result]}</svg>
           </div>
-          <div class="wiz-term-title" style="color:${titleColors[node.result]}">${node.title}</div>
+          <div class="wiz-term-title" style="color:${p.titleColor}">${node.title}</div>
           <div class="wiz-term-msg">${node.msg}</div>
           <div class="wiz-term-btns">
             ${node.restartAt ? `<button class="wiz-term-btn" style="background:var(--surface2);color:var(--text2)" onclick="wizJump('${node.restartAt}')">${node.restartLabel}</button>` : ''}
-            <button class="wiz-term-btn" style="background:var(--blue);color:white" onclick="wizReset()">Start Over</button>
+            <button class="wiz-term-btn" style="background:${p.btnBg};color:#fff" onclick="wizReset()">Start Over</button>
           </div>
         </div>
         <div class="wiz-foot" style="justify-content:flex-start">
@@ -483,15 +830,6 @@ function renderWizard() {
       ).join('')}</div>`
     : '';
 
-  const choicesHTML = node.choices.map((ch, i) => `
-    <div class="wiz-choice" onclick="wizGo('${ch.next}')">
-      <div style="flex:1">
-        <div class="wiz-choice-label">${ch.label}</div>
-        ${ch.sub ? `<div class="wiz-choice-sub">${ch.sub}</div>` : ''}
-      </div>
-      <span class="wiz-choice-arr">›</span>
-    </div>`).join('');
-
   stage.innerHTML = `
     <div class="wiz-card">
       <div class="wiz-head">
@@ -500,7 +838,16 @@ function renderWizard() {
         ${node.sub ? `<div class="wiz-sub">${node.sub}</div>` : ''}
       </div>
       ${infoHTML}
-      <div class="wiz-choices">${choicesHTML}</div>
+      <div class="wiz-choices">
+        ${node.choices.map(ch => `
+          <div class="wiz-choice" onclick="wizGo('${ch.next}')">
+            <div style="flex:1">
+              <div class="wiz-choice-label">${ch.label}</div>
+              ${ch.sub ? `<div class="wiz-choice-sub">${ch.sub}</div>` : ''}
+            </div>
+            <span class="wiz-choice-arr">›</span>
+          </div>`).join('')}
+      </div>
       <div class="wiz-foot">
         ${wizHistory.length > 1 ? '<button class="wiz-back" onclick="wizBack()">&#8592; Back</button>' : '<span></span>'}
         <span class="wiz-depth">${depth} step${depth !== 1 ? 's' : ''} in</span>
@@ -508,13 +855,13 @@ function renderWizard() {
     </div>`;
 }
 
-function wizGo(id) { wizHistory.push(id); renderWizard(); }
-function wizBack() { if (wizHistory.length > 1) { wizHistory.pop(); renderWizard(); } }
-function wizReset() { wizHistory = ['start']; renderWizard(); }
-function wizJump(id) { wizHistory = ['start', id]; renderWizard(); }
+function wizGo(id)    { wizHistory.push(id); renderWizard(); }
+function wizBack()    { if (wizHistory.length > 1) { wizHistory.pop(); renderWizard(); } }
+function wizReset()   { wizHistory = ['start']; renderWizard(); }
+function wizJump(id)  { wizHistory = ['start', id]; renderWizard(); }
 
 /* ═══════════════════════════════════════════════════════
-   STEPPER DATA
+   STEPPER
 ═══════════════════════════════════════════════════════ */
 const STEPS = [
   {
@@ -525,7 +872,7 @@ const STEPS = [
       'Sprint leads: log source = "Sprint" in Zoho, then skip to Step 4.',
       'Self-sourced leads: begin the full research process at Step 2.',
     ],
-    branch:{ header:'Route', rows:[['Sprint Lead','Skip to Step 4 — Trigger Events'],['Self-Sourced','Continue to Step 2 — Research']] },
+    branch:{header:'Route',rows:[['Sprint Lead','Skip to Step 4 — Trigger Events'],['Self-Sourced','Continue to Step 2 — Research']]},
     tools:['Zoho CRM']
   },
   {
@@ -534,54 +881,50 @@ const STEPS = [
     points:[
       'Company size, revenue, vertical and geographic presence.',
       'Identify: Founder / CEO / VP Supply Chain / Head of Logistics.',
-      'Recent signals: funding rounds, expansions, leadership hires, job postings.',
+      'Recent signals: funding, expansion, leadership hires, job postings.',
     ],
-    branch:null,
-    tools:['Tracxn','Lusha','SignalHire','LinkedIn']
+    branch:null, tools:['Tracxn','Lusha','SignalHire','LinkedIn']
   },
   {
     num:'03', title:'Categorise — A, B, C or D', color:'#7c3aed', bg:'#ddd6fe',
     tag:'Gemini Required', tagBg:'#f5f3ff', tagColor:'#6d28d9',
     points:[
-      'A = Rs.100Cr+ turnover · B = Rs.50–100Cr · C = Rs.10–50Cr · D = Under Rs.10Cr',
+      'A = Rs.100Cr+ · B = Rs.50-100Cr · C = Rs.10-50Cr · D = Under Rs.10Cr',
       'Use the Client Category Gemini Tool to confirm the category.',
       'Log category in Zoho immediately — mandatory before outreach.',
     ],
-    branch:null,
-    tools:['Client Category Tool','Zoho CRM']
+    branch:null, tools:['Client Category Tool','Zoho CRM']
   },
   {
     num:'04', title:'Trigger Events & Sales Hook', color:'#d97706', bg:'#fde68a',
-    tag:'Sprint Joins Here', tagBg:'#fffbeb', tagColor:'#b45309',
+    tag:'Sprint Joins Here', tagBg:'#fffbeb', tagColor:'#92400e',
     points:[
-      'Signals: recent funding / new SKU launch / geographic expansion / ops leadership hire.',
-      'Use the Sales Hook Gemini Tool to build a personalised opening line.',
-      'Sprint leads enter the process at this step with context already confirmed.',
+      'Signals: recent funding / new SKU launch / geographic expansion / ops hire.',
+      'Use the Sales Hook Gemini Tool for a personalised opening line.',
+      'Sprint leads enter the process here with context already confirmed.',
     ],
-    branch:null,
-    tools:['Sales Hook Tool','LinkedIn']
+    branch:null, tools:['Sales Hook Tool','LinkedIn']
   },
   {
-    num:'05', title:'Add to Zoho Sprint Plan', color:'#0f766e', bg:'#99f6e4',
+    num:'05', title:'Add to Zoho Sprint Plan', color:'#0d9488', bg:'#99f6e4',
     tag:'CRM Mandatory', tagBg:'#f0fdfa', tagColor:'#0f766e',
     points:[
       'Log source, category, trigger event and all research notes.',
       'A & B accounts: identify at least 3 contacts before outreach begins.',
-      'Enrich contacts: Lusha for email / mobile, SignalHire for DM profiles.',
+      'Enrich contacts via Lusha (email / mobile) or SignalHire (DM profiles).',
       'Set the initial outreach task — no lead enters the sprint without one.',
     ],
-    branch:null,
-    tools:['Zoho CRM','Lusha','SignalHire']
+    branch:null, tools:['Zoho CRM','Lusha','SignalHire']
   },
   {
-    num:'06', title:'Outreach — Call / Email / LinkedIn', color:'#0284c7', bg:'#bae6fd',
+    num:'06', title:'Outreach — Call / Email / LinkedIn', color:'#00b09b', bg:'#bae6fd',
     tag:'', tagBg:'', tagColor:'',
     points:[
       'Target DMs only: Founder, CEO, VP SCM, Head of Logistics.',
       'Lead every outreach with the trigger event — make the reason specific.',
-      'Rotate channels if no response: call → email → LinkedIn.',
+      'Rotate channels if no response: call to email to LinkedIn.',
     ],
-    branch:{ header:'Branch', rows:[
+    branch:{header:'Branch',rows:[
       ['Not connected','Retry via next channel · Loop back to Step 6'],
       ['Wrong contact','Find correct DM via Lusha / SignalHire · Retry Step 6'],
       ['Right DM reached','Continue to Step 7'],
@@ -590,28 +933,28 @@ const STEPS = [
   },
   {
     num:'07', title:'Requirement Check & Qualification', color:'#0d9488', bg:'#ccfbf1',
-    tag:'Full Walkthrough', tagBg:'#f0fdfa', tagColor:'#0d9488',
+    tag:'Full Walkthrough', tagBg:'#f0fdfa', tagColor:'#0f766e',
     points:[
-      'Pitch ALL services: warehousing · fulfilment · last-mile · reverse logistics · tech platform.',
-      'Never mark No Requirement without completing the full walkthrough.',
+      'Pitch ALL services: warehousing, fulfilment, last-mile, reverse logistics, tech platform.',
+      'Never mark No Requirement without completing the full service walkthrough.',
       'Requirement confirmed: mark Qualified, schedule demo in Zoho.',
     ],
-    branch:{ header:'Outcome', rows:[
-      ['Requirement confirmed','QUALIFIED — Schedule demo · END'],
+    branch:{header:'Outcome',rows:[
+      ['Requirement confirmed','QUALIFIED — Schedule demo and END'],
       ['No requirement','Continue to Step 8 — Follow-Up'],
     ]},
     tools:['Zoho CRM','Sales Portal']
   },
   {
     num:'08', title:'Follow-Up & Re-engagement', color:'#b45309', bg:'#fde68a',
-    tag:'All Categories', tagBg:'#fffbeb', tagColor:'#b45309',
+    tag:'All Categories', tagBg:'#fffbeb', tagColor:'#78350f',
     points:[
       'Date given by client: create Zoho task for that exact day.',
       'No date: create a mandatory 60-day follow-up task.',
       'A & B: connect with 2nd DM then 3rd DM before any Junk decision.',
       'C & D: task is set — return to Step 6 when the follow-up date fires.',
     ],
-    branch:{ header:'A & B Extended Logic', rows:[
+    branch:{header:'A & B Extended Logic',rows:[
       ['2nd DM — requirement confirmed','QUALIFIED · END'],
       ['2nd DM — no requirement','Try 3rd DM'],
       ['3rd DM — requirement confirmed','QUALIFIED · END'],
@@ -625,12 +968,11 @@ const STEPS = [
 let openStep = 0;
 
 function renderStepper() {
-  const list = document.getElementById('stepper-list');
-  list.innerHTML = STEPS.map((s, i) => `
-    <div class="step-row ${i === openStep ? 'open' : ''} ${i < openStep ? 'done' : ''}" id="sr-${i}" onclick="toggleStep(${i})">
+  document.getElementById('stepper-list').innerHTML = STEPS.map((s,i) => `
+    <div class="step-row ${i===openStep?'open':''} ${i<openStep?'done':''}" id="sr-${i}" onclick="toggleStep(${i})">
       <div class="step-left">
-        <div class="step-circle">${i < openStep ? '&#10003;' : s.num}</div>
-        ${i < STEPS.length - 1 ? '<div class="step-line"></div>' : ''}
+        <div class="step-circle">${i<openStep?'&#10003;':s.num}</div>
+        ${i<STEPS.length-1?'<div class="step-line"></div>':''}
       </div>
       <div class="step-right">
         <div class="step-hdr">
@@ -638,115 +980,99 @@ function renderStepper() {
             <div class="step-num">STEP ${s.num}</div>
             <div class="step-name">${s.title}</div>
           </div>
-          ${s.tag ? `<span class="step-tag" style="background:${s.tagBg};color:${s.tagColor}">${s.tag}</span>` : ''}
+          ${s.tag?`<span class="step-tag" style="background:${s.tagBg};color:${s.tagColor}">${s.tag}</span>`:''}
         </div>
         <div class="step-body">
           <div class="step-pts">
-            ${s.points.map(p => `
+            ${s.points.map(p=>`
               <div class="step-pt">
                 <div class="step-pt-dot" style="background:${s.color}"></div>
                 <div class="step-pt-txt">${p}</div>
               </div>`).join('')}
           </div>
-          ${s.branch ? `
-            <div class="step-branch" style="border-color:${s.color}30">
+          ${s.branch?`
+            <div class="step-branch" style="border-color:${s.bg}">
               <div class="sb-hdr" style="background:${s.bg};color:${s.color}">${s.branch.header}</div>
-              ${s.branch.rows.map(([cond, out]) => `
+              ${s.branch.rows.map(([c,o])=>`
                 <div class="sb-row">
-                  <div class="sb-cond" style="color:${s.color}">${cond}</div>
-                  <div class="sb-out">${out}</div>
+                  <div class="sb-cond" style="color:${s.color}">${c}</div>
+                  <div class="sb-out">${o}</div>
                 </div>`).join('')}
-            </div>` : ''}
+            </div>`:''}
           <div class="step-tools-row">
-            ${s.tools.map(t => `<span class="tool-chip">${t}</span>`).join('')}
+            ${s.tools.map(t=>`<span class="tool-chip">${t}</span>`).join('')}
           </div>
-          ${i < STEPS.length - 1 ? `
-            <button class="step-next-btn" onclick="event.stopPropagation();jumpStep(${i + 1})">
-              Next: ${STEPS[i + 1].title} &#8594;
-            </button>` : `
-            <div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border:2px solid #bbf7d0;border-radius:10px;font-size:12px;font-weight:700;color:#15803d">
-              End of process — lead is Qualified or marked as Junk in Zoho.
-            </div>`}
+          ${i<STEPS.length-1
+            ?`<button class="step-next-btn" onclick="event.stopPropagation();jumpStep(${i+1})">Next: ${STEPS[i+1].title} &#8594;</button>`
+            :`<div style="margin-top:10px;padding:10px 14px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;font-size:12px;font-weight:700;color:#15803d">End of process — lead is Qualified or marked as Junk in Zoho.</div>`}
         </div>
       </div>
     </div>`).join('');
 }
 
 function toggleStep(i) {
-  openStep = (openStep === i) ? -1 : i;
+  openStep = openStep===i ? -1 : i;
   renderStepper();
-  if (openStep >= 0) {
-    const el = document.getElementById('sr-' + openStep);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+  if(openStep>=0) document.getElementById('sr-'+openStep)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-
 function jumpStep(i) {
-  openStep = i;
-  renderStepper();
-  const el = document.getElementById('sr-' + i);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  openStep = i; renderStepper();
+  document.getElementById('sr-'+i)?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 /* ═══════════════════════════════════════════════════════
    GUIDELINES
 ═══════════════════════════════════════════════════════ */
 const KPIS = [
-  { num: '100', label: 'Monthly Deals Generated', sub: 'Pipeline output target', color: '#0d9488' },
-  { num: '15%', label: 'RFQ to Deal Close Rate', sub: 'Minimum conversion expected', color: '#2563eb' },
-  { num: '100%', label: 'Revenue vs Target', sub: 'Non-negotiable monthly floor', color: '#7c3aed' },
-  { num: '>95%', label: 'CRM Hygiene Score', sub: 'Data quality in Zoho', color: '#d97706' },
-  { num: '99%', label: 'Categorization Fill Rate', sub: 'Every lead must be categorised', color: '#0284c7' },
-  { num: '25/wk', label: 'Sprint Lead Volume', sub: 'Minimum sprint assignments', color: '#b45309' },
+  {num:'100',   label:'Monthly Deals Generated',   sub:'Pipeline output target',            color:'#00b09b'},
+  {num:'15%',   label:'RFQ to Deal Close Rate',     sub:'Minimum conversion expected',       color:'#4f46e5'},
+  {num:'100%',  label:'Revenue vs Target',          sub:'Non-negotiable monthly floor',      color:'#0d9488'},
+  {num:'>95%',  label:'CRM Hygiene Score',          sub:'Data quality in Zoho',              color:'#d97706'},
+  {num:'99%',   label:'Categorization Fill Rate',   sub:'Every lead must be categorised',    color:'#7c3aed'},
+  {num:'25/wk', label:'Sprint Lead Volume',         sub:'Minimum sprint assignments',        color:'#b45309'},
 ];
 
 const DONUT_DATA = [
-  { label: 'Large (>Rs.10L)', pct: 10, color: '#0d9488' },
-  { label: 'Medium (Rs.5–10L)', pct: 20, color: '#2563eb' },
-  { label: 'Small (Rs.1–5L)', pct: 50, color: '#f59e0b' },
-  { label: 'Very Small (<Rs.1L)', pct: 20, color: '#94a3b8' },
+  {label:'Large (>Rs.10L)',   pct:10, color:'#00b09b'},
+  {label:'Medium (Rs.5-10L)', pct:20, color:'#4f46e5'},
+  {label:'Small (Rs.1-5L)',   pct:50, color:'#f59e0b'},
+  {label:'Very Small (<Rs.1L)',pct:20, color:'#94a3b8'},
 ];
 
 const GOLDEN_RULES = [
-  { n:'01', t:'<strong>Never mark No Requirement</strong> without completing the full service walkthrough across all five lines.' },
-  { n:'02', t:'<strong>Every lead must have a next action.</strong> No lead exits a conversation without a Zoho task.' },
-  { n:'03', t:'<strong>A & B accounts require 3 DM attempts</strong> minimum before any Junk decision is made.' },
-  { n:'04', t:'<strong>C & D leads are never marked Junk directly.</strong> They always receive a follow-up task first.' },
-  { n:'05', t:'<strong>Log before you call.</strong> No outreach begins until the lead is fully set up in the Zoho Sprint Plan.' },
-  { n:'06', t:'<strong>Target decision makers only.</strong> Founder, CEO, VP SCM, Head of Logistics — never waste an outreach on a gatekeeper.' },
-  { n:'07', t:'<strong>Open with the trigger event.</strong> Every call and email must have a specific, personalised hook — no generic pitches.' },
+  {n:'01',t:'<strong>Never mark No Requirement</strong> without completing the full service walkthrough across all five lines.'},
+  {n:'02',t:'<strong>Every lead must have a next action.</strong> No lead exits a conversation without a Zoho task.'},
+  {n:'03',t:'<strong>A & B accounts require 3 DM attempts</strong> minimum before any Junk decision is made.'},
+  {n:'04',t:'<strong>C & D leads are never marked Junk directly.</strong> They always receive a follow-up task first.'},
+  {n:'05',t:'<strong>Log before you call.</strong> No outreach begins until the lead is fully set up in the Zoho Sprint Plan.'},
+  {n:'06',t:'<strong>Target decision makers only.</strong> Founder, CEO, VP SCM, Head of Logistics — never waste outreach on a gatekeeper.'},
+  {n:'07',t:'<strong>Open with the trigger event.</strong> Every call and email must have a specific, personalised hook — no generic pitches.'},
 ];
 
 function renderGuidelines() {
-  // KPIs
-  document.getElementById('kpi-grid').innerHTML = KPIS.map(k => `
+  document.getElementById('kpi-grid').innerHTML = KPIS.map(k=>`
     <div class="kpi-card">
       <div class="kpi-num" style="color:${k.color}">${k.num}</div>
       <div class="kpi-label">${k.label}</div>
       <div class="kpi-sub">${k.sub}</div>
     </div>`).join('');
 
-  // Donut
-  const r = 38, cx = 55, cy = 55, stroke = 20;
-  const circ = 2 * Math.PI * r;
-  let offset = 0;
-  let segs = '';
-  DONUT_DATA.forEach(d => {
-    const dash = (d.pct / 100) * circ;
-    segs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="${stroke}"
-      stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
-    offset += dash;
+  const r=38,cx=55,cy=55,stroke=20,circ=2*Math.PI*r;
+  let offset=0,segs='';
+  DONUT_DATA.forEach(d=>{
+    const dash=(d.pct/100)*circ;
+    segs+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="${stroke}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset+=dash;
   });
-  document.getElementById('donut-svg').innerHTML = segs;
-  document.getElementById('donut-legend').innerHTML = DONUT_DATA.map(d => `
+  document.getElementById('donut-svg').innerHTML=segs;
+  document.getElementById('donut-legend').innerHTML=DONUT_DATA.map(d=>`
     <div class="legend-row">
       <div class="legend-dot" style="background:${d.color}"></div>
       <div class="legend-label">${d.label}</div>
       <div class="legend-val">${d.pct}%</div>
     </div>`).join('');
 
-  // Golden rules
-  document.getElementById('golden-rules').innerHTML = GOLDEN_RULES.map(r => `
+  document.getElementById('golden-rules').innerHTML=GOLDEN_RULES.map(r=>`
     <div class="rule-row">
       <span class="rule-num">${r.n}</span>
       <span class="rule-txt">${r.t}</span>
@@ -756,53 +1082,8 @@ function renderGuidelines() {
 /* ═══════════════════════════════════════════════════════
    TOOLKIT
 ═══════════════════════════════════════════════════════ */
-const TOOLS = [
-  {
-    name: 'Edgistify Sales Portal', type: 'Internal Platform',
-    typeBg: '#dbeafe', typeColor: '#1e40af',
-    desc: 'Pipeline management, lead tracking, and internal sales operations hub.',
-    url: 'https://sales.edgistify.com/', dl: false
-  },
-  {
-    name: 'Client Category Tool', type: 'Gemini AI',
-    typeBg: '#ede9fe', typeColor: '#4c1d95',
-    desc: 'Categorise leads as A, B, C or D based on revenue and logistics relevance.',
-    url: 'https://gemini.google.com/gem/1Y8ZoClIZ1nEJP6kv6vIPs8gmH6l0rA7n?usp=sharing', dl: false
-  },
-  {
-    name: 'Sales Hook Tool', type: 'Gemini AI',
-    typeBg: '#ede9fe', typeColor: '#4c1d95',
-    desc: 'Build trigger-event hooks and personalised outreach angles for each lead.',
-    url: 'https://gemini.google.com/gem/13G2iNa58sKNrGOQ-YlFhiA2FYTtS1XbA?usp=sharing', dl: false
-  },
-  {
-    name: 'Lusha', type: 'Enrichment',
-    typeBg: '#fef3c7', typeColor: '#78350f',
-    desc: 'Mobile numbers and verified email addresses for decision makers.',
-    url: 'https://www.lusha.com', dl: false
-  },
-  {
-    name: 'SignalHire', type: 'Enrichment',
-    typeBg: '#fef3c7', typeColor: '#78350f',
-    desc: 'In-depth decision maker profiles and contact discovery across industries.',
-    url: 'https://www.signalhire.com', dl: false
-  },
-  {
-    name: 'Tracxn', type: 'Research',
-    typeBg: '#f1f5f9', typeColor: '#334155',
-    desc: 'Startup data, funding history, revenue estimates, and company intelligence.',
-    url: 'https://tracxn.com', dl: false
-  },
-  {
-    name: 'Full Workflow PDF', type: 'Official Guide',
-    typeBg: '#d1fae5', typeColor: '#065f46',
-    desc: 'Complete process reference document for the lead qualification framework.',
-    url: 'https://drive.google.com/uc?export=download&id=14nzhPHaAj9EGxET2OgJQjkbaLE48jrD4', dl: true
-  },
-];
-
 function renderToolkit() {
-  document.getElementById('tools-grid').innerHTML = TOOLS.map(t => `
+  document.getElementById('tools-grid').innerHTML = TOOLS.map(t=>`
     <div class="tool-card">
       <div class="tool-card-top">
         <div class="tool-type-badge" style="background:${t.typeBg};color:${t.typeColor}">${t.type}</div>
@@ -810,8 +1091,8 @@ function renderToolkit() {
       </div>
       <div class="tool-card-body">
         <div class="tool-desc">${t.desc}</div>
-        <a class="tool-btn" href="${t.url}" ${t.dl ? 'download' : 'target="_blank" rel="noopener"'}>
-          ${t.dl ? 'Download PDF' : 'Open Tool'}
+        <a class="tool-btn" href="${t.url}" ${t.dl?'download':'target="_blank" rel="noopener"'}>
+          ${t.dl?'Download PDF':'Open Tool'}
         </a>
       </div>
     </div>`).join('');
@@ -822,6 +1103,7 @@ function renderToolkit() {
 ═══════════════════════════════════════════════════════ */
 renderWizard();
 renderStepper();
+renderSidebar();
 renderGuidelines();
 renderToolkit();
 </script>
