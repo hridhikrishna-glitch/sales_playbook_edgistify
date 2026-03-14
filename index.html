@@ -334,6 +334,82 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 
 /* FOOTER */
 footer{padding:24px 28px;text-align:center;color:var(--text3);font-size:11px;border-top:1px solid var(--border);margin-top:36px}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤900px)
+═══════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .main{padding:20px 18px}
+  .outreach-layout{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;top:auto}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .tools-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤600px)
+═══════════════════════════════════════════════════════ */
+@media(max-width:600px){
+  /* Nav */
+  .nav-inner{height:auto;padding:10px 16px;flex-wrap:wrap;gap:8px}
+  .nav-logo{font-size:15px}
+  .nav-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;gap:3px;padding-bottom:2px;width:100%}
+  .nav-tab{padding:6px 12px;font-size:12px;white-space:nowrap;flex-shrink:0}
+
+  /* Main */
+  .main{padding:16px 14px}
+
+  /* Page header */
+  .page-header h1{font-size:19px}
+  .page-header p{font-size:12px}
+
+  /* Sub-tabs */
+  .subtab-bar{width:100%}
+  .subtab{flex:1;text-align:center;padding:7px 10px;font-size:12px}
+
+  /* Outreach layout — stack sidebar below wizard */
+  .outreach-layout{grid-template-columns:1fr;gap:16px}
+  .sidebar{position:static}
+
+  /* Wizard */
+  .wiz-head{padding:16px 16px 13px}
+  .wiz-q{font-size:16px}
+  .wiz-info{padding:12px 16px}
+  .wiz-choices{padding:12px 16px;gap:7px}
+  .wiz-choice{padding:11px 13px}
+  .wiz-choice-label{font-size:12px}
+  .wiz-foot{padding:10px 16px}
+  .wiz-terminal{padding:28px 16px}
+  .wiz-term-title{font-size:17px}
+
+  /* Stepper */
+  .step-name{font-size:13px}
+  .step-body{padding:13px 14px}
+  .step-pt-txt{font-size:11.5px}
+  .sb-cond{min-width:100px;font-size:10px}
+  .sb-out{font-size:10px}
+  .step-next-btn{font-size:11px;padding:8px 14px}
+
+  /* Sidebar */
+  .sidebar-tool-name{font-size:11px}
+  .sidebar-step-name{font-size:12px}
+
+  /* Guidelines */
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi-num{font-size:22px}
+  .kpi-label{font-size:9px}
+  .rules-card{padding:16px}
+  .rule-txt{font-size:12px}
+  .donut-wrap{flex-direction:column;align-items:flex-start;gap:16px}
+
+  /* Toolkit */
+  .tools-grid{grid-template-columns:1fr;gap:12px}
+
+  /* Splash */
+  .splash-wordmark h1{font-size:28px}
+  .splash-welcome p{font-size:13px;padding:0 12px}
+  .splash-progress-wrap{width:180px}
+}
 </style>
 </head>
 <body>
