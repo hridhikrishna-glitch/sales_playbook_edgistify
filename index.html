@@ -393,7 +393,7 @@ footer{padding:24px 28px;text-align:center;color:var(--text3);font-size:11px;bor
       Edgistify <span class="nav-sub">/ Sales Ops</span>
     </div>
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="showPage('outreach',this)">Outreach Guide</button>
+      <button class="nav-tab active" onclick="showPage('outreach',this)">Lead Outreach Guide</button>
       <button class="nav-tab" onclick="showPage('guidelines',this)">Guidelines &amp; KPIs</button>
       <button class="nav-tab" onclick="showPage('toolkit',this)">Toolkit</button>
     </div>
@@ -405,8 +405,8 @@ footer{padding:24px 28px;text-align:center;color:var(--text3);font-size:11px;bor
   <!-- OUTREACH PAGE -->
   <div id="page-outreach" class="page active">
     <div class="page-header">
-      <h1>Outreach Guide</h1>
-      <p>Step through the process live with the wizard, or use the process reference stepper.</p>
+      <h1>Lead Outreach Guide</h1>
+      <p>Step through the lead qualification process live, or use the reference stepper below.</p>
     </div>
 
     <div class="subtab-bar">
@@ -535,8 +535,8 @@ function showSubtab(id, btn) {
 ═══════════════════════════════════════════════════════ */
 const TOOLS = [
   {
-    id:'portal', name:'Sales Portal', type:'Internal', typeBg:'#dbeafe', typeColor:'#1e40af',
-    desc:'Pipeline management, lead tracking, and internal sales operations hub.',
+    id:'portal', name:'Prospecting Navigator', type:'Internal', typeBg:'#dbeafe', typeColor:'#1e40af',
+    desc:'Navigate and manage your sprint pipeline, leads, and outreach tasks in one place.',
     url:'https://sales.edgistify.com/', dl:false,
     iconColor:'#1d6a8f', iconBg:'#e8f5fb',
     steps:['all']
@@ -642,7 +642,7 @@ const WIZ = {
       'Recent signals: funding, expansion, leadership hires, job postings.',
       'Use Tracxn for revenue estimates and Lusha / SignalHire for contacts.',
     ],
-    choices:[{label:'Research complete', sub:'Company profile and DM names ready', next:'categorise'}]
+    choices:[{label:'Research complete', sub:'Company profile and decision maker names ready', next:'categorise'}]
   },
   categorise:{
     title:'Categorise the Lead', sub:'Use the Client Category Tool. What category is this lead?',
@@ -660,25 +660,31 @@ const WIZ = {
     info:[
       'Signals: recent funding / new SKU launch / geographic expansion / ops leadership hire.',
       'Use the Sales Hook Gemini Tool to craft a personalised opening line.',
-      'Log source, category, trigger and all notes in Zoho Sprint Plan.',
+      'Log source, category, trigger and all notes in <a href="https://sales.edgistify.com/" target="_blank" style="color:var(--teal);font-weight:700">Zoho CRM Sprint Plan</a>.',
+      'This exercise is to be done every Saturday — the sprint plan is updated for the upcoming week on this day.',
     ],
     choices:[{label:'Hook ready — Zoho updated', sub:'CRM logged, outreach task set', next:'outreach'}]
   },
   outreach:{
-    title:'Outreach Attempt', sub:'Call / Email / LinkedIn. Did you connect?',
+    title:'Outreach Attempt', sub:'Call / Email / LinkedIn. Did you connect to the lead?',
     info:[
-      'Target DMs only: Founder, CEO, VP SCM, Head of Logistics.',
-      'Lead every contact with the trigger event — make the reason specific.',
+      'Target Decision Makers only: Founder, CEO, VP Supply Chain, Head of Logistics.',
+      'Lead every contact with the trigger event — make the reason specific and relevant.',
+      'Conduct a structured discovery call.',
+      'Use Prospecting Navigator for effective probing during the call.',
+      'Document key pain points and business objectives — use an AI note taker if possible.',
+      'Identify key stakeholders and decision-makers during the call.',
+      'Follow the process flow for guidance on Zoho CRM (process guide in tool).',
     ],
     choices:[
-      {label:'Connected — someone responded', sub:'', next:'relevant'},
-      {label:'No response — all channels tried', sub:'', next:'retry_outreach'},
+      {label:'Connected to the lead', sub:'', next:'relevant'},
+      {label:'No response — alternate point of contact identified prior', sub:'', next:'retry_outreach'},
     ]
   },
   retry_outreach:{
     terminal:true, result:'retry',
     title:'Retry Outreach',
-    msg:'Rotate channel: call to email to LinkedIn. Update the Zoho task and try again.',
+    msg:'Reach out via an alternate point of contact identified earlier. Rotate channel — call, email, or LinkedIn. Update the Zoho task before retrying.',
     restartAt:'outreach', restartLabel:'Back to Outreach'
   },
   relevant:{
@@ -686,20 +692,23 @@ const WIZ = {
     info:['Decision maker = Founder, CEO, VP SCM, Head of Logistics, Director of Operations.'],
     choices:[
       {label:'Yes — correct decision maker', sub:'',                            next:'qualify'},
-      {label:'No — wrong contact',           sub:'Gatekeeper or unrelated role', next:'find_dm'},
+      {label:'No — wrong contact', sub:'', next:'find_dm'},
     ]
   },
   find_dm:{
     terminal:true, result:'retry',
-    title:'Find the Right Contact',
-    msg:'Never close because you hit a gatekeeper. Use Lusha or SignalHire to identify the correct DM and retry outreach.',
+    title:'Find the Right Decision Maker',
+    msg:'Never close just because you reached the wrong person. Use Lusha or SignalHire to identify the correct decision maker at this company and retry outreach.',
     restartAt:'outreach', restartLabel:'Back to Outreach'
   },
   qualify:{
-    title:'Requirement Check', sub:'Full service walkthrough completed. Was a requirement found?',
+    title:'Requirement Check & Discovery', sub:'Full service walkthrough completed. Was a requirement found?',
     info:[
       'Pitch ALL services: warehousing, fulfilment, last-mile, reverse logistics, tech platform.',
-      'Never mark No Requirement without completing the full walkthrough.',
+      'Request a Google Meet for a structured walkthrough if not already on a call.',
+      'Ensure Granola (AI note taker) is running during the meeting.',
+      'Capture all meeting notes, pain points, and next steps in Zoho CRM immediately after.',
+      'Never mark No Requirement without completing the full service walkthrough.',
     ],
     choices:[
       {label:'Requirement confirmed',  sub:'At least one service line is a fit',     next:'qualified_end'},
@@ -722,17 +731,17 @@ const WIZ = {
   },
   task_specific:{
     title:'Task Created for Specified Date', sub:'Zoho task logged. What is this lead\'s category?',
-    info:['A & B leads require additional DM outreach before you can close the loop.'],
+    info:['A & B leads require outreach to additional decision makers before you can close the loop.'],
     choices:[
-      {label:'Category A or B', sub:'Rs.50Cr+ — work through additional DMs',       next:'dm2'},
+      {label:'Category A or B', sub:'Rs.50Cr+ — work through additional decision makers',       next:'dm2'},
       {label:'Category C or D', sub:'Lower priority — task is set, loop back when due', next:'loop_cd'},
     ]
   },
   task_60:{
     title:'60-Day Task Created', sub:'Default task set for 60 days. What is this lead\'s category?',
-    info:['A & B leads get an additional DM outreach attempt before waiting.'],
+    info:['A & B leads get an additional decision maker outreach attempt before waiting.'],
     choices:[
-      {label:'Category A or B', sub:'Rs.50Cr+ — work through additional DMs',       next:'dm2'},
+      {label:'Category A or B', sub:'Rs.50Cr+ — work through additional decision makers',       next:'dm2'},
       {label:'Category C or D', sub:'Lower priority — task is set, loop back when due', next:'loop_cd'},
     ]
   },
@@ -743,7 +752,7 @@ const WIZ = {
     restartAt:'outreach', restartLabel:'Back to Outreach'
   },
   dm2:{
-    title:'2nd Decision Maker', sub:'Reach a second DM at the same company. Was a requirement found?',
+    title:'2nd Decision Maker', sub:'Reach a second decision maker at the same company. Was a requirement found?',
     info:[
       'Identify a 2nd DM: VP, Director, or Co-Founder.',
       'Use Lusha or SignalHire for a fresh contact.',
@@ -755,21 +764,21 @@ const WIZ = {
     ]
   },
   dm3:{
-    title:'3rd Decision Maker', sub:'Final attempt — most senior available DM. Requirement found?',
+    title:'3rd Decision Maker', sub:'Final attempt — most senior available decision maker. Requirement found?',
     info:[
-      'Last attempt: most senior remaining DM at the company.',
+      'Last attempt: most senior remaining decision maker at the company.',
       'Switch channel if previous attempts failed.',
       'Log everything in Zoho before making any Junk decision.',
     ],
     choices:[
       {label:'Requirement confirmed',           sub:'',                               next:'qualified_end'},
-      {label:'No — all 3 DMs exhausted',        sub:'No requirement across all contacts', next:'junk_end'},
+      {label:'No — all 3 decision makers exhausted', sub:'No requirement across all contacts', next:'junk_end'},
     ]
   },
   junk_end:{
     terminal:true, result:'junk',
     title:'Mark as Junk',
-    msg:'All 3 decision makers contacted — no requirement found. Mark as Junk in Zoho with full notes and contact details.',
+    msg:'All 3 decision makers contacted — no requirement found. Mark as Junk in Zoho with full notes, contact details, and reasons.',
     restartAt:null
   },
 };
@@ -1045,7 +1054,7 @@ const GOLDEN_RULES = [
   {n:'03',t:'<strong>A & B accounts require 3 DM attempts</strong> minimum before any Junk decision is made.'},
   {n:'04',t:'<strong>C & D leads are never marked Junk directly.</strong> They always receive a follow-up task first.'},
   {n:'05',t:'<strong>Log before you call.</strong> No outreach begins until the lead is fully set up in the Zoho Sprint Plan.'},
-  {n:'06',t:'<strong>Target decision makers only.</strong> Founder, CEO, VP SCM, Head of Logistics — never waste outreach on a gatekeeper.'},
+  {n:'06',t:'<strong>Target decision makers only.</strong> Founder, CEO, VP SCM, Head of Logistics — always reach the person with actual authority.'},
   {n:'07',t:'<strong>Open with the trigger event.</strong> Every call and email must have a specific, personalised hook — no generic pitches.'},
 ];
 
